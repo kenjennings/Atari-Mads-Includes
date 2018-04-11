@@ -51,74 +51,43 @@
 ; mByte_Abs
 ;
 ;===============================================================================
-; 8-BIT MATH - MULTIPLICATION
+; 8-BIT MATH - MULTIPLICATION LIBRARY LOOKUP TABLES
 ;===============================================================================
-; mByte_Mult2_M ; ASL(M) = *2
-; mByte_Mult2_A
-; mByte_Mult2
 ;
-; mByte_Mult3_M ; ASL(M) = *2 + M = *3
-; mByte_Mult3_A
-; mByte_Mult3
+; All mByte_MultX_M macros use arguments: result address, mulitplicand address.
 ;
-; mByte_MultL3_M ; (Lib Lookup table)
-; mByte_MultL3_A
-; mByte_MultL3
+; RESULT ADDRESS CANNOT BE THE SAME AS MULTIPLICAND ADDRESS.
 ;
-; mByte_Mult4_M ; ASL(ASL(M)) = *4
-; mByte_Mult4_A
-; mByte_Mult4
+; Multiplicand will not be modified.
 ;
-; mByte_Mult5_M ; ASL(ASL(M)) = *4 + M = *5
-; mByte_Mult5_A
-; mByte_Mult5
+; If Result does not fit in a Byte, use mWord_Mult instead.
 ;
-; mByte_MultL5_M ; (Lib Lookup table)
-; mByte_MultL5_A
-; mByte_MultL5
+;===============================================================================
+; mByte_Mult2_M  ; *2
+; mByte_Mult3_M  ; *2 + 1
+; mByte_Mult4_M  ; *4
+; mByte_Mult5_M  ; *4 + 1
+; mByte_Mult6_M  ; (*2 + 1) * 2
+; mByte_Mult7_M  ; *4 + *2 + 1
+; mByte_Mult8_M  ; *8
+; mByte_Mult9_M  ; *8 + 1
+; mByte_Mult10_M ; (*4 + 1) * 2
 ;
-; mByte_Mult6_M ; ASL(M) = *2 + (ASL(ASL(M))) = *4) = *6
-; mByte_Mult6_A
-; mByte_Mult6
+; mByte_Mult ; Macro calling the mByte_MultX_M macros above.
 ;
-; mByte_MultL6_M ; (Lib Lookup table)
-; mByte_MultL6_A
-; mByte_MultL6
-; 
-; mByte_Mult7_M ; ASM(M) = *2 + (ASL(ASL(M)) = *4) =*6 + M = *7
-; mByte_Mult7_A
-; mByte_Mult7
+;===============================================================================
+; 8-BIT MATH - MULTIPLICATION LIBRARY LOOKUP TABLES
+;===============================================================================
+; mByte_MultL3_M 
+; mByte_MultL4_M 
+; mByte_MultL5_M 
 ;
-; mByte_MultL7_M ; (Lib Lookup table)
-; mByte_MultL7_A
-; mByte_MultL7
+; . . .
 ;
-; mByte_Mult8_M ; ASL(ASL(ASL(M))) = *8
-; mByte_Mult8_A
-; mByte_Mult8 
+; mByte_MultL42_M 
 ;
-; mByte_Mult9_M ; ASL(ASL(ASL(M))) = *8 + M = *9
-; mByte_Mult9_A
-; mByte_Mult9
+; mByte_MultL ; Macro calling the mByte_MultLX_M above.
 ;
-; mByte_MultL9_M ; (Lib Lookup table)
-; mByte_MultL9_A
-; mByte_MultL9
-;
-; mByte_Mult10_M ; ASL(M) = *2 + ASL(ASL(ASL(M))) = *8 = *10
-; mByte_Mult10_A ; Or  ASL( ASL(ASL(M)) = *4 + M = *5) = *10
-; mByte_Mult10 
-;
-; mByte_Mult10_M ; (Lib Lookup table)
-; mByte_Mult10_A
-; mByte_Mult10 
-;
-; mByte_Mult16_M ; ASL(ASL(ASL(ASL(M)))) = *16
-; mByte_Mult16_A
-
-; mByte_Mult16
-;
-; mByte_Mult 
 ;===============================================================================
 
 
@@ -129,6 +98,7 @@
 ; mWord_M_Add_V
 ; mWord_V_Add_M
 ; mWord_M_Add_M
+;
 ; mWord_Add
 ; 
 ;===============================================================================
@@ -138,51 +108,35 @@
 ; mWord_M_Sub_V
 ; mWord_V_Sub_M
 ; mWord_M_Sub_M
+;
 ; mWord_Sub
 ;
 ;===============================================================================
 ; 16-BIT MATH - MULTIPLICATION
 ;===============================================================================
+;
+; All mWord_MultX_M macros use arguments: result address, mulitplicand address.
+;
+; RESULT ADDRESS CANNOT BE THE SAME AS MULTIPLICAND ADDRESS.
+;
+; Multiplicand will not be modified.
+;
+; Note that results can overflow the 16-bit result.
+;
 ; mWord_Mult2_M ; ASL(M) = *2
-; mWord_Mult2_V
-; mWord_Mult2
-;
 ; mWord_Mult3_M ; ASL(M) = *2 + M = *3
-; mWord_Mult3_V
-; mWord_Mult3
-;
 ; mWord_Mult4_M ; ASL(ASL(M)) = *4
-; mWord_Mult4_V
-; mWord_Mult4
-;
 ; mWord_Mult5_M ; ASL(ASL(M)) = *4 + M = *5
-; mWord_Mult5_V
-; mWord_Mult5
-;
 ; mWord_Mult6_M ; ASL(M) = *2 + (ASL(ASL(M))) = *4) =*6
-; mWord_Mult6_V
-; mWord_Mult6
-; 
-; A Lookup table for 7 is practical as *3 + *4 the long way is a drag.
 ; mWord_Mult7_M ; Y=M; A = Lookup,Y
-; mWord_Mult7_V
-; mWord_Mult7
-;
 ; mWord_Mult8_M ; ASL(ASL(ASL(M))) = *8
-; mWord_Mult8_V
-; mWord_Mult8 
-;
 ; mWord_Mult9_M ; ASL(ASL(ASL(M))) = *8 + M = *9
-; mWord_Mult9_V
-; mWord_Mult9
-;
 ; mWord_Mult10_M ; ASL(M) = *2 + ASL(ASL(ASL(M))) = *8 = *10
-; mWord_Mult10_V
-; mWord_Mult10 
-;
 ; mWord_Mult16_M ; ASL(ASL(ASL(ASL(M)))) = *16
-; mWord_Mult16_V
-; mWord_Mult16
+;
+; mWord_Mult ; Macro calling the mWord_MultX_M macros above.
+;
+; mWord_Multiply ; Generic routine code performing iterative algorithm.
 ;
 ;===============================================================================
 
@@ -594,47 +548,22 @@
 ;
 ; Remember, "Byte" means limited to 8-bit results.
 ;
-; The library routines use a lookup table for speed.
-; The second argument for the library routine is the 
-; maximum size of the lookup table.
+; Result address and Multiplicand address cannot be the same.
 ;
-; Note there is temporary Page 0 use for mult-step formulas.
+; Multiplicand will not be modified.
+;
 ;===============================================================================
-; mByte_Mult2_M 
+; mByte_Mult2_M  ; *2
+; mByte_Mult3_M  ; *2 + 1
+; mByte_Mult4_M  ; *4
+; mByte_Mult5_M  ; *4 + 1
+; mByte_Mult6_M  ; (*2 + 1) * 2
+; mByte_Mult7_M  ; *4 + *2 + 1
+; mByte_Mult8_M  ; *8
+; mByte_Mult9_M  ; *8 + 1
+; mByte_Mult10_M ; (*4 + 1) * 2
 ;
-; mByte_Mult3_M 
-;
-; . . . 
-;
-; mByte_MultL3_M ; (Lib Lookup table)
-;
-; mByte_Mult4_M 
-;
-; mByte_Mult5_M 
-;
-; mByte_MultL5_M ; (Lib Lookup table)
-;
-; mByte_Mult6_M 
-;
-; mByte_MultL6_M ; (Lib Lookup table)
-; 
-; mByte_Mult7_M 
-;
-; mByte_MultL7_M ; (Lib Lookup table)
-;
-; mByte_Mult8_M 
-;
-; mByte_Mult9_M 
-;
-; mByte_MultL9_M ; (Lib Lookup table)
-;
-; mByte_Mult10_M 
-;
-; mByte_MultL10_M ; (Lib Lookup table)
-;
-; mByte_MultL16_M 
-;
-; mByte_Mult 
+; mByte_Mult ; One macro to check arguments and call the correct multiplier.
 ;===============================================================================
 
 ;-------------------------------------------------------------------------------
@@ -1674,7 +1603,173 @@
 .endm
 
 
+;-------------------------------------------------------------------------------
+;                                                         BYTE_MULT   A
+;-------------------------------------------------------------------------------
+; mByte_Mult <result (address)>, <Multiplicand (address)>, <Multiplier>
+;
+; Result = Multiplicand * Multiplier
+;
+; or   X = Y * Z.
+;
+; Multiply Multiplicand times the multiplier.  Store value in Result.
+;
+; RESULT ADDRESS CANNOT BE THE SAME AS MULTIPLICAND ADDRESS.
+; 
+; MULTIPLIER IS A CONSTANT VALUE, NOT AN ADDRESS!
+;
+; Multiplicand will not be modified.
+;
+; If Result does not fit in a Byte, too bad, so sad.  Use mWord_Mult instead.
+;
+; This provides a wrapper that figures out which math macro to call
+; slightly simplifying the syntax for calling the right macro.
+;
+;-------------------------------------------------------------------------------
+.macro mByte_Mult result,multiplicand,multiplier
+	.if %%0<>3
+		.error "mByte_Mult: 3 arguments (result addr, multiplicand addr,multiplier) required."
+	.else
+		.if :result=:multiplicand
+			.error "mByte_Mult: result addr and multiplicand addr cannot be the same."
+		.else
+			.if :multiplier=0 ; Duh.
+				lda #$00
+				sta :result
+			.endif
+			.if :multiplier=1 ; Double Duh.
+				lda multiplicand
+				sta result
+			.endif
+			.if :multiplier=2
+				mByte_Mult2_M :result,:multiplicand
+			.endif
+			.if :multiplier=3
+				mByte_Mult3_M :result,:multiplicand
+			.endif
+			.if :multiplier=4
+				mByte_Mult4_M :result,:multiplicand
+			.endif
+			.if :multiplier=5
+				mByte_Mult5_M :result,:multiplicand
+			.endif
+			.if :multiplier=6
+				mByte_Mult6_M :result,:multiplicand
+			.endif
+			.if :multiplier=7
+				mByte_Mult7_M :result,:multiplicand
+			.endif
+			.if :multiplier=8
+				mByte_Mult8_M :result,:multiplicand
+			.endif
+			.if :multiplier=9
+				mByte_Mult9_M :result,:multiplicand
+			.endif
+			.if :multiplier=10
+				mByte_Mult10_M :result,:multiplicand
+			.endif
+			.if :multiplier=11
+				mByte_Mult11_M :result,:multiplicand
+			.endif
+			.if :multiplier=12
+				mByte_Mult12_M :result,:multiplicand
+			.endif
+			.if :multiplier=13
+				mByte_Mult13_M :result,:multiplicand
+			.endif
+			.if :multiplier=12
+				mByte_Mult14_M :result,:multiplicand
+			.endif
+			.if :multiplier=15
+				mByte_Mult15_M :result,:multiplicand
+			.endif
+			.if :multiplier=16
+				mByte_Mult16_M :result,:multiplicand
+			.endif
+			.if :multiplier=17
+				mByte_Mult17_M :result,:multiplicand
+			.endif
+			.if :multiplier=18
+				mByte_Mult18_M :result,:multiplicand
+			.endif
+			.if :multiplier=19
+				mByte_Mult19_M :result,:multiplicand
+			.endif
+			.if :multiplier=20
+				mByte_Mult20_M :result,:multiplicand
+			.endif
+			.if :multiplier=21
+				mByte_Mult21_M :result,:multiplicand
+			.endif
+			.if :multiplier=22
+				mByte_Mult22_M :result,:multiplicand
+			.endif
+			.if :multiplier=23
+				mByte_Mult23_M :result,:multiplicand
+			.endif
+			.if :multiplier=24
+				mByte_Mult24_M :result,:multiplicand
+			.endif
+			.if :multiplier=25
+				mByte_Mult25_M :result,:multiplicand
+			.endif
+			.if :multiplier=26
+				mByte_Mult26_M :result,:multiplicand
+			.endif
+			.if :multiplier=27
+				mByte_Mult27_M :result,:multiplicand
+			.endif
+			.if :multiplier=28
+				mByte_Mult28_M :result,:multiplicand
+			.endif
+			.if :multiplier=29
+				mByte_Mult29_M :result,:multiplicand
+			.endif
+			.if :multiplier=30
+				mByte_Mult30_M :result,:multiplicand
+			.endif
+			.if :multiplier=31
+				mByte_Mult31_M :result,:multiplicand
+			.endif
+			.if :multiplier=32
+				mByte_Mult32_M :result,:multiplicand
+			.endif
+			.if :multiplier=33
+				mByte_Mult33_M :result,:multiplicand
+			.endif
+			.if :multiplier=34
+				mByte_Mult34_M :result,:multiplicand
+			.endif
+			.if :multiplier=35
+				mByte_Mult35_M :result,:multiplicand
+			.endif
+			.if :multiplier=36
+				mByte_Mult36_M :result,:multiplicand
+			.endif
+			.if :multiplier=37
+				mByte_Mult37_M :result,:multiplicand
+			.endif
+			.if :multiplier=38
+				mByte_Mult38_M :result,:multiplicand
+			.endif
+			.if :multiplier=39
+				mByte_Mult39_M :result,:multiplicand
+			.endif
+			.if :multiplier=40
+				mByte_Mult40_M :result,:multiplicand
+			.endif
+			.if :multiplier=41
+				mByte_Mult41_M :result,:multiplicand
+			.endif
+			.if :multiplier=42
+				mByte_Mult42_M :result,:multiplicand
+			.endif
 
+		.endif
+	.endif
+.endm
+
+mByte_Mult
 
 
 
