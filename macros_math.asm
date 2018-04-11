@@ -1486,7 +1486,7 @@
 ;-------------------------------------------------------------------------------
 ; mByte_Mult36_M <result (address)>, <address>
 ;
-; Multiply value from address, store at result. ((*16 + *2) * 2)
+; Multiply value from address, store at result. (*32 + *4)
 ;
 ;-------------------------------------------------------------------------------
 .macro mByte_Mult36_M result,address
@@ -1495,13 +1495,13 @@
 	.else
 		lda :address ; Low byte at Address
 		asl          ; Times 2
-		sta :result  ; Save in low byte for later.
 		asl          ; Times 4
+		sta :result  ; Save in low byte for later.
 		asl          ; Times 8
 		asl          ; Times 16
+		asl          ; Times 32
 		clc          ; Clear carry/borrow
-		adc :result  ; Add to the saved *2. Now Accumulator is * 18
-		asl          ; 18 * 2 is 36
+		adc :result  ; Add to the saved *4. Now Accumulator is * 36
 		sta :result  ; save in low byte of Result
 	.endif
 .endm
@@ -1647,6 +1647,31 @@
 .endm
 
 
+;-------------------------------------------------------------------------------
+;                                                        BYTE_MULT42_M   A
+;-------------------------------------------------------------------------------
+; mByte_Mult42_M <result (address)>, <address>
+;
+; Multiply value from address, store at result. (((*4 + 1) * 4 + 1) * 2)
+;
+;-------------------------------------------------------------------------------
+.macro mByte_Mult42_M result,address
+	.if %%0<>2
+		.error "mByte_Mult42_M: 2 arguments (result addr, address) required."
+	.else
+		lda :address ; Low byte at Address
+		asl          ; Times 2
+		asl          ; Times 4
+		clc          ; Clear carry/borrow
+		adc :address ; Add to original value.  Now Accumulator is * 5
+		asl          ; 5 * 2 is 10
+		asl          ; 10 * 2 is 20
+		clc          ; Clear carry/borrow
+		adc :address ; Add to original value.  Now Accumulator is * 21
+		asl          ; 21 * 2 is 42
+		sta :result  ; save in low byte of Result
+	.endif
+.endm
 
 
 
