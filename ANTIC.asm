@@ -36,75 +36,75 @@ LPENV = $0235 ; (Read) PENV
 ;
 ; DMACTL and SDMCTL - DMA control for display and Player/Missile graphics
 ;
-MASK_DL_DMA =          ~11011111 ; Enable/Disable DMA to read the Display List
-MASK_PM_RESOLUTION =   ~11101111 ; Set P/M graphics DMA to 1 or 2 scan line per update  
-MASK_PM_DMA =          ~11110011 ; Enable/Disable DMA for Players/Missiles
-MASK_PLAYFIELD_WIDTH = ~11111100 ; Enable playfield display/set playfield width
+MASK_DL_DMA =          %11011111 ; Enable/Disable DMA to read the Display List
+MASK_PM_RESOLUTION =   %11101111 ; Set P/M graphics DMA to 1 or 2 scan line per update  
+MASK_PM_DMA =          %11110011 ; Enable/Disable DMA for Players/Missiles
+MASK_PLAYFIELD_WIDTH = %11111100 ; Enable playfield display/set playfield width
 ;
 ; DMACTL and SDMCTL - Enable/Disable DMA to read the Display List
 ;
-ENABLE_DL_DMA =  ~00100000
-DISABLE_DL_DMA = ~00000000  ; defining this is overkill
+ENABLE_DL_DMA =  %00100000
+DISABLE_DL_DMA = %00000000  ; defining this is overkill
 ;
 ; DMACTL and SDMCTL - Set P/M graphics DMA to 1 or 2 scan line per update  
 ;
-PM_1LINE_RESOLUTION = ~00010000
-PM_2LINE_RESOLUTION = ~00000000
+PM_1LINE_RESOLUTION = %00010000
+PM_2LINE_RESOLUTION = %00000000
 ;
 ; DMACTL and SDMCTL - Enable DMA for Players/Missiles
 ;
-ENABLE_PLAYER_DMA =  ~00001000
-ENABLE_MISSILE_DMA = ~00000100
-ENABLE_PM_DMA =      ~00001100
+ENABLE_PLAYER_DMA =  %00001000
+ENABLE_MISSILE_DMA = %00000100
+ENABLE_PM_DMA =      %00001100
 ;
 ; DMACTL and SDMCTL - Enable playfield display/set playfield width
 ;
-PLAYFIELD_DISABLE =      ~00000000 ; No width is the same as no display
-PLAYFIELD_WIDTH_NARROW = ~00000001 ; 32 characters/128 color clocks
-PLAYFIELD_WIDTH_NORMAL = ~00000010 ; 40 characters/160 color clocks
-PLAYFIELD_WIDTH_WIDE =   ~00000011 ; 48 characters/192 color clocks (176 visible)
+PLAYFIELD_DISABLE =      %00000000 ; No width is the same as no display
+PLAYFIELD_WIDTH_NARROW = %00000001 ; 32 characters/128 color clocks
+PLAYFIELD_WIDTH_NORMAL = %00000010 ; 40 characters/160 color clocks
+PLAYFIELD_WIDTH_WIDE =   %00000011 ; 48 characters/192 color clocks (176 visible)
 ;
 ; CHACTL - Character display control
 ;
-MASK_CHACTL_REFLECT = ~11111011 ; Enable/Disable vertical reflect
-MASK_CHACTL_INVERSE = ~11111101 ; Enable/Disable characters with high bit set displayed as inverse 
-MASK_CHACTL_BLANK =   ~11111110 ; Enable/Disable characters with high bit set displayed as blank space
+MASK_CHACTL_REFLECT = %11111011 ; Enable/Disable vertical reflect
+MASK_CHACTL_INVERSE = %11111101 ; Enable/Disable characters with high bit set displayed as inverse 
+MASK_CHACTL_BLANK =   %11111110 ; Enable/Disable characters with high bit set displayed as blank space
 ;
 ; CHACTL - Enable character display options
 ; 
-CHACTL_REFLECT = ~00000100 ; Enable vertical reflect
-CHACTL_INVERSE = ~00000010 ; Enable inverse display for characters with high bit set
-CHACTL_BLANK =   ~00000001 ; Enable blank display for characters with high bit set
+CHACTL_REFLECT = %00000100 ; Enable vertical reflect
+CHACTL_INVERSE = %00000010 ; Enable inverse display for characters with high bit set
+CHACTL_BLANK =   %00000001 ; Enable blank display for characters with high bit set
 ;
 ; NMIEN (NMIRES and NMIST) - Non-Maskable Interupt (NMI) Reset and Status
 ;
-MASK_NMI_DLI =   ~01111111 ; Enable/Disable Display List Interrupts
-MASK_NMI_VBI =   ~10111111 ; Enable/Disable Vertical Blank Interrupt
-MASK_NMI_RESET = ~11011111 ; Enable/Disable Reset Key Interrupt
+MASK_NMI_DLI =   %01111111 ; Enable/Disable Display List Interrupts
+MASK_NMI_VBI =   %10111111 ; Enable/Disable Vertical Blank Interrupt
+MASK_NMI_RESET = %11011111 ; Enable/Disable Reset Key Interrupt
 ;
 ; NMIEN (NMIRES and NMIST) - Enable Non-Maskable Interupts
 ;
-NMI_DLI =   ~10000000 ; Enable Display List Interrupts
-NMI_VBI =   ~01000000 ; Enable Vertical Blank Interrupt
-NMI_RESET = ~00100000 ; Enable Reset Key Interrupt
+NMI_DLI =   %10000000 ; Enable Display List Interrupts
+NMI_VBI =   %01000000 ; Enable Vertical Blank Interrupt
+NMI_RESET = %00100000 ; Enable Reset Key Interrupt
 ;
 ;=================================================
 ; Display List Instructions/Options Mask
 ;
-MASK_DL_DLI =     ~01111111 ; Display List Interrupt on last scan line of graphics line
-MASK_DL_LMS =     ~10111111 ; Reload Memory Scan address for this graphics line
-MASK_DL_VSCROLL = ~11011111 ; Vertical scrolling for this graphics line
-MASK_DL_HSCROLL = ~11101111 ; Horizontal scrolling for this graphics line
-MASK_DL_MODE =    ~11110000 ; Text/Graphics Modes
+MASK_DL_DLI =     %01111111 ; Display List Interrupt on last scan line of graphics line
+MASK_DL_LMS =     %10111111 ; Reload Memory Scan address for this graphics line
+MASK_DL_VSCROLL = %11011111 ; Vertical scrolling for this graphics line
+MASK_DL_HSCROLL = %11101111 ; Horizontal scrolling for this graphics line
+MASK_DL_MODE =    %11110000 ; Text/Graphics Modes
 ;
 ; Display List Instruction Options
 ;
-DL_DLI =     ~10000000 ; Enable Display List Interrupt on last scan line of graphics line
-DL_LMS =     ~01000000 ; Enable Reload Memory Scan address for this graphics line
-DL_VSCROLL = ~00100000 ; Enable Vertical scrolling for this graphics line
-DL_HSCROLL = ~00010000 ; Enable Horizontal scrolling for this graphics line
+DL_DLI =     %10000000 ; Enable Display List Interrupt on last scan line of graphics line
+DL_LMS =     %01000000 ; Enable Reload Memory Scan address for this graphics line
+DL_VSCROLL = %00100000 ; Enable Vertical scrolling for this graphics line
+DL_HSCROLL = %00010000 ; Enable Horizontal scrolling for this graphics line
 ;
-DL_MODE =    ~00001111 ; Collection of Text/Graphics Modes
+DL_MODE =    %00001111 ; Collection of Text/Graphics Modes
 ;
 ; Display List Instructions, Jump 
 ;
@@ -159,17 +159,17 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ; even (redundantly) the LMS.
 ;-------------------------------------------------------------------------------
 
-	.macro mDL_LMS  mode,screenMemory
-		.if %%0<>2
-			.error "mDL_LMS: 2 arguments required (mode (value of low nybble $2 to $F), screen memory (address)."
-		.else
-			MDL_TEMP=:mode&$0F
-			.if MDL_TEMP<DL_TEXT_2
-				.error "mDL_LMS: mode argument must be a value from $2 to $F."
-			.else 
-				; Byte for Mode plus LMS option.  And then the screen memory address.
-				.byte :mode|DL_LMS
-				.word :screenMem   
-			.endif
-		.endif
-	.endm
+.macro mDL_LMS  mode,screenMemory
+	.if :0<>2
+		.error "mDL_LMS: 2 arguments required (mode (value of low nybble $2 to $F), screen memory (address)."
+	.endif
+
+	MDL_TEMP=:mode&$0F
+	.if MDL_TEMP<DL_TEXT_2
+		.error "mDL_LMS: mode argument must be a value from $2 to $F."
+	.endif
+
+	; Byte for Mode plus LMS option.  And then the screen memory address.
+	.byte :mode|DL_LMS
+	.word :screenMem   
+.endm
