@@ -95,56 +95,56 @@ GPRIOR = $026F ; PRIOR - Control Priority, Fifth Player and GTIA modes
 ;
 ; SIZEP0 - SIZEP3
 ;
-PLAYER_SIZE_BITS = ~00000011
-PM_SIZE_NORMAL =   ~00000000 ; One color clock per Player/Missile pixel
-PM_SIZE_DOUBLE =   ~00000001 ; Two color clocks per Player/Missile pixel
-PM_SIZE_QUAD =     ~00000011 ; Fopur color clocks per Player/Missile pixel
+PLAYER_SIZE_BITS = %00000011
+PM_SIZE_NORMAL =   %00000000 ; One color clock per Player/Missile pixel
+PM_SIZE_DOUBLE =   %00000001 ; Two color clocks per Player/Missile pixel
+PM_SIZE_QUAD =     %00000011 ; Fopur color clocks per Player/Missile pixel
 ;
 ; SIZEM and GRAFM (and missile memory)
 ;
-MASK_MISSILE0_BITS = ~11111100
-MASK_MISSILE1_BITS = ~11110011
-MASK_MISSILE2_BITS = ~11001111
-MASK_MISSILE3_BITS = ~00111111
+MASK_MISSILE0_BITS = %11111100
+MASK_MISSILE1_BITS = %11110011
+MASK_MISSILE2_BITS = %11001111
+MASK_MISSILE3_BITS = %00111111
 ;
-MISSILE0_BITS =      ~00000011
-MISSILE1_BITS =      ~00001100
-MISSILE2_BITS =      ~00110000
-MISSILE3_BITS =      ~11000000
+MISSILE0_BITS =      %00000011
+MISSILE1_BITS =      %00001100
+MISSILE2_BITS =      %00110000
+MISSILE3_BITS =      %11000000
 ; 
 ; Collisions MxPF, MxPL, PxPF, PxPL
 ; COLPMx or COLPFx where X is bits 0 through 3
 ;
-MASK_COLPMF0_BIT = ~11111110 ; Player or Missile v Player or Playfield color 0
-MASK_COLPMF1_BIT = ~11111101 ; Player or Missile v Player or Playfield color 1
-MASK_COLPMF2_BIT = ~11111011 ; Player or Missile v Player or Playfield color 2
-MASK_COLPMF3_BIT = ~11110111 ; Player or Missile v Player or Playfield color 3
+MASK_COLPMF0_BIT = %11111110 ; Player or Missile v Player or Playfield color 0
+MASK_COLPMF1_BIT = %11111101 ; Player or Missile v Player or Playfield color 1
+MASK_COLPMF2_BIT = %11111011 ; Player or Missile v Player or Playfield color 2
+MASK_COLPMF3_BIT = %11110111 ; Player or Missile v Player or Playfield color 3
 ;
-COLPMF0_BIT =      ~00000001 ; Player or Missile v Player or Playfield color 0
-COLPMF1_BIT =      ~00000010 ; Player or Missile v Player or Playfield color 1
-COLPMF2_BIT =      ~00000100 ; Player or Missile v Player or Playfield color 2
-COLPMF3_BIT =      ~00001000 ; Player or Missile v Player or Playfield color 3
+COLPMF0_BIT =      %00000001 ; Player or Missile v Player or Playfield color 0
+COLPMF1_BIT =      %00000010 ; Player or Missile v Player or Playfield color 1
+COLPMF2_BIT =      %00000100 ; Player or Missile v Player or Playfield color 2
+COLPMF3_BIT =      %00001000 ; Player or Missile v Player or Playfield color 3
 ;
 ; Colors Registers
 ;
-COLOR_BITS = ~11110000
-LUMA_BITS =  ~00001111
+COLOR_BITS = %11110000
+LUMA_BITS =  %00001111
 ;
 ; PRIOR and GPRIOR - Control Priority, Fifth Player and GTIA modes
 ;
-MASK_PRIORITY =      ~11110000 ; Player/Missile, Playfield priority
-MASK_FIFTH_PLAYER =  ~11101111 ; Enable/Disable Fifth Player
-MASK_MULTICOLOR_PM = ~11011111 ; Enable/Disable Player color mixing
-MASK_GTIA_MODE =     ~00111111 ; Enable/Disable GTIA playfield modes
+MASK_PRIORITY =      %11110000 ; Player/Missile, Playfield priority
+MASK_FIFTH_PLAYER =  %11101111 ; Enable/Disable Fifth Player
+MASK_MULTICOLOR_PM = %11011111 ; Enable/Disable Player color mixing
+MASK_GTIA_MODE =     %00111111 ; Enable/Disable GTIA playfield modes
 ;
-PRIORITY_BITS =      ~00001111 ; Player/Missile, Playfield priority
-FIFTH_PLAYER =       ~00010000 ; Enable Fifth Player
-MULTICOLOR_PM =      ~00100000 ; Enable Player color mixing
+PRIORITY_BITS =      %00001111 ; Player/Missile, Playfield priority
+FIFTH_PLAYER =       %00010000 ; Enable Fifth Player
+MULTICOLOR_PM =      %00100000 ; Enable Player color mixing
 ;
-GTIA_MODE_DEFAULT =  ~00000000 ; Normal CTIA color interpretation
-GTIA_MODE_16_SHADE = ~01000000 ; 16 shades of background color (COLBK)
-GTIA_MODE_9_COLOR =  ~10000000 ; 9 colors from registers, COLPM0 is background
-GTIA_MODE_16_COLOR = ~11000000 ; 16 hues of brigntess of background color (COLBK)
+GTIA_MODE_DEFAULT =  %00000000 ; Normal CTIA color interpretation
+GTIA_MODE_16_SHADE = %01000000 ; 16 shades of background color (COLBK)
+GTIA_MODE_9_COLOR =  %10000000 ; 9 colors from registers, COLPM0 is background
+GTIA_MODE_16_COLOR = %11000000 ; 16 hues of brigntess of background color (COLBK)
 ;
 ; Player/Missile to Playfield priority values:
 ;
@@ -171,46 +171,46 @@ GTIA_MODE_16_COLOR = ~11000000 ; 16 hues of brigntess of background color (COLBK
 ;
 ; VDELAY - Delay PM DMA to render 2 scan line Player data one scan line lower 
 ;
-MASK_VD_MISSILE0 = ~11111110
-MASK_VD_MISSILE1 = ~11111101
-MASK_VD_MISSILE2 = ~11111011
-MASK_VD_MISSILE3 = ~11110111
-MASK_VD_PLAYER0 =  ~11101111
-MASK_VD_PLAYER1 =  ~11011111
-MASK_VD_PLAYER2 =  ~10111111
-MASK_VD_PLAYER3 =  ~01111111
+MASK_VD_MISSILE0 = %11111110
+MASK_VD_MISSILE1 = %11111101
+MASK_VD_MISSILE2 = %11111011
+MASK_VD_MISSILE3 = %11110111
+MASK_VD_PLAYER0 =  %11101111
+MASK_VD_PLAYER1 =  %11011111
+MASK_VD_PLAYER2 =  %10111111
+MASK_VD_PLAYER3 =  %01111111
 ;
-VD_MISSILE0 =      ~00000001
-VD_MISSILE1 =      ~00000010
-VD_MISSILE2 =      ~00000100
-VD_MISSILE3 =      ~00001000
-VD_PLAYER0 =       ~00010000
-VD_PLAYER1 =       ~00100000
-VD_PLAYER2 =       ~01000000
-VD_PLAYER3 =       ~10000000
+VD_MISSILE0 =      %00000001
+VD_MISSILE1 =      %00000010
+VD_MISSILE2 =      %00000100
+VD_MISSILE3 =      %00001000
+VD_PLAYER0 =       %00010000
+VD_PLAYER1 =       %00100000
+VD_PLAYER2 =       %01000000
+VD_PLAYER3 =       %10000000
 ;
 ; GRACTL - Enable/Disable Player/Missile DMA to GRAFxx registers. And latch triggers.
 ;
-MASK_ENABLE_MISSILES = ~11111110 ; Enable/Disable Missile DMA to GRAFM register
-MASK_ENABLE_PLAYERS =  ~11111101 ; Enable/Disable Player DMA to GRAFPx registers
-MASK_TRIGGER_LATCH =   ~11111011 ; Enable/Disable jostick trigger latching
+MASK_ENABLE_MISSILES = %11111110 ; Enable/Disable Missile DMA to GRAFM register
+MASK_ENABLE_PLAYERS =  %11111101 ; Enable/Disable Player DMA to GRAFPx registers
+MASK_TRIGGER_LATCH =   %11111011 ; Enable/Disable jostick trigger latching
 ;
-ENABLE_MISSILES =      ~00000001 ; Enable Missile DMA to GRAFM register
-ENABLE_PLAYERS =       ~00000010 ; Enable Player DMA to GRAFPx registers
-TRIGGER_LATCH =        ~00000100 ; Enable joystick trigger latching
+ENABLE_MISSILES =      %00000001 ; Enable Missile DMA to GRAFM register
+ENABLE_PLAYERS =       %00000010 ; Enable Player DMA to GRAFPx registers
+TRIGGER_LATCH =        %00000100 ; Enable joystick trigger latching
 ;
 ; CONSOL and CONSPK - 0 is key pressed
 ;
-MASK_CONSOLE_KEYS =    ~11111000
-MASK_CONSOLE_START =   ~11111110 ; Start button
-MASK_CONSOLE_SELECT =  ~11111101 ; Select button
-MASK_CONSOLE_OPTION =  ~11111011 ; Option button
-MASK_CONSOLE_SPEAKER = ~11110111 ; (Write) Keyboard speaker
+MASK_CONSOLE_KEYS =    %11111000
+MASK_CONSOLE_START =   %11111110 ; Start button
+MASK_CONSOLE_SELECT =  %11111101 ; Select button
+MASK_CONSOLE_OPTION =  %11111011 ; Option button
+MASK_CONSOLE_SPEAKER = %11110111 ; (Write) Keyboard speaker
 ;
-CONSOLE_START =        ~00000001 ; Start button
-CONSOLE_SELECT =       ~00000010 ; Select button
-CONSOLE_OPTION =       ~00000100 ; Option button
-CONSOLE_SPEAKER =      ~00001000 ; (Wrie) Keyboard speaker
+CONSOLE_START =        %00000001 ; Start button
+CONSOLE_SELECT =       %00000010 ; Select button
+CONSOLE_OPTION =       %00000100 ; Option button
+CONSOLE_SPEAKER =      %00001000 ; (Wrie) Keyboard speaker
 
 ;=================================================
 ; Other Value Lists 
@@ -257,7 +257,12 @@ PM_1LINE_OVERSCAN_BOTTOM = $F7
 ;
 ; Helpful Colors. (Sort of. Your TV mileage my vary.)
 ;
-COLOR_GREY =         $00
+COLOR_GREY =         $00 ; From black to white - That averages to grey, right?
+; Some also like to think of the first color value as black.
+COLOR_BLACK =        $00
+; White is the same color as black, just brighter.
+COLOR_WHITE =        $0F
+
 COLOR_ORANGE1 =      $10
 COLOR_ORANGE2 =      $20
 COLOR_RED_ORANGE =   $30
@@ -273,5 +278,4 @@ COLOR_GREEN =        $C0
 COLOR_YELLOW_GREEN = $D0
 COLOR_ORANGE_GREEN = $E0
 COLOR_LITE_ORANGE =  $F0
-; Some like to think of first color value as black.
-COLOR_BLACK =        $00
+
