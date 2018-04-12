@@ -24,14 +24,14 @@
 ; Like (in C):  C = D.
 ;-------------------------------------------------------------------------------
 
-.macro mLoadInt
-	.IF %0<>2
-		.ERROR "LoadInt: 2 arguments (dest addr, source addr) required."
+.macro mLoadInt target,source
+	.IF :0<>2
+		.ERROR "LoadInt: 2 arguments (target addr, source addr) required."
 	.ELSE
-		lda %2
-		sta %1
-		lda %2 + 1
-		sta %1 + 1
+		lda :source
+		sta :target
+		lda :source + 1
+		sta :target + 1
 	.ENDIF
 .endm
 
@@ -50,105 +50,14 @@
 ;  C = &D
 ;-------------------------------------------------------------------------------
 
-.macro mLoadIntP
-	.if %0<>2
-		.error "LoadIntP: 2 arguments (dest addr, 16-bit value) required."
+.macro mLoadIntP target,value
+	.if :0<>2
+		.error "LoadIntP: 2 arguments (target addr, 16-bit value) required."
 	.else
-		lda #<%2
-		sta %1
-		lda #>%2
-		sta %1 + 1
-	.endif
-.endm
-
-;===============================================================================
-; MEMORY
-;===============================================================================
-; Assembly Tricks...
-; 
-; Routine to force program address to next address aligned in memory.
-;===============================================================================
-
-;-------------------------------------------------------------------------------
-;                                                                  ALIGN
-;-------------------------------------------------------------------------------
-; mAlign <Size>
-;
-; Forces the program address (*=) to the next nearest address 
-; aligned to the specified BASE2 size.
-; 
-; Size must be BASE2 number: 2, 4, 8, 16, 32... up to 16384 (16K).
-; 
-; Typically would be used to align the current address to a page (256 bytes)
-; or to 1K, 2K, 4K in preparation of defining various graphics resources.
-;
-; Note that if the current location is at correct alignment the 
-; normal treatment would have advanced the program counter to the
-; next aligned increment.  The adjustment subtracts a byte from 
-; the program address and then applies the shift to the next 
-; aligned size which is the current location.
-;
-; Yes, I clearly see the obvious pattern here, but can't work out 
-; how to do this in a more clever way.  So, a lot of separate 
-; .IF/.ENDIF blocks.
-;-------------------------------------------------------------------------------
-
-.macro mAlign
-	.if %0<>1
-		.error "Align: 1 argument (base 2 size) required."
-	.else
-		MALIGN_TEMP .= 0
-		.if %1=~0000000000000010 ; 2
-			MALIGN_TEMP .= ~1111111111111110
-		.endif
-		.if %1=~0000000000000100 ; 4
-			MALIGN_TEMP .= ~1111111111111100
-		.endif
-		.if %1=~0000000000001000 ; 8
-			MALIGN_TEMP .= ~1111111111111000
-		.endif
-
-		.if %1=~0000000000010000 ; 16
-			MALIGN_TEMP .= ~1111111111110000
-		.endif
-		.if %1=~0000000000100000 ; 32
-			MALIGN_TEMP .= ~1111111111100000
-		.endif
-		.if %1=~0000000001000000 ; 64
-			MALIGN_TEMP .= ~1111111111000000
-		.endif
-		.if %1=~0000000010000000 ; 128
-			MALIGN_TEMP .= ~1111111110000000
-		.endif
-
-		.if %1=~0000000100000000 ; 256
-			MALIGN_TEMP .= ~1111111100000000
-		.endif
-		.if %1=~0000001000000000 ; 512
-			MALIGN_TEMP .= ~1111111000000000
-		.endif
-		.if %1=~0000010000000000 ; 1024
-			MALIGN_TEMP .= ~1111110000000000
-		.endif
-		.if %1=~0000100000000000 ; 2048
-			MALIGN_TEMP .= ~1111100000000000
-		.endif
-
-		.if %1=~0001000000000000 ; 4096
-			MALIGN_TEMP .= ~1111000000000000
-		.endif
-		.if %1=~0010000000000000 ; 8192
-			MALIGN_TEMP .= ~1110000000000000
-		.endif
-		.if %1=~0100000000000000 ; 16384
-			MALIGN_TEMP .= ~1100000000000000
-		.endif
-
-		.if MALIGN_TEMP>0
-		 	*= [[*-1]&MALIGN_TEMP]+%1 	; Align to start of (next) size
-		.else
-			.error "Align: Argument for size is not a base 2 value."
-		.endif
+		lda #<:source
+		sta :target
+		lda #>:source
+		sta :target + 1
 	.endif
 .endm
 
@@ -192,16 +101,16 @@
 ; location at the program load time.
 ;-------------------------------------------------------------------------------
 
-.macro mDiskPoke
-	.if %0<>2
-		.error "DiskPoke: 2 arguments (dest addr, byte value) required."
+.macro mDiskPoke address,value
+	.if :0<>2
+		.error "DiskPoke: 2 arguments (target addr, byte value) required."
 	.else
-		.if %2>$FF
+		.if :value>$FF
 			.error "DiskPoke: Agument 2 for byte value is greater then $FF"
 		.else
 			DISKPOKE_TEMP .= *
-			*=%1
-			.byte %2
+			*=:address
+			.byte :value
 			*=DISKPOKE_TEMP
 		.endif
 	.endif
@@ -216,13 +125,13 @@
 ; memory location at the program load time.
 ;-------------------------------------------------------------------------------
 
-.macro mDiskDPoke
-	.if %0<>2
-		.error "DiskDPoke: 2 arguments (dest addr, integer value) required."
+.macro mDiskDPoke addres,value
+	.if :0<>2
+		.error "DiskDPoke: 2 arguments (target addr, integer value) required."
 	.else
 		DISKDPOKE_TEMP .= *
-		*=%1
-		.word %2
+		*=:address
+		.word :value
 		*=DISKDPOKE_TEMP
 	.endif
 .endm 
@@ -366,6 +275,41 @@
 	RTS 
 .endm 
 
+;-------------------------------------------------------------------------------
+;                                                                CHAINDLI A
+;-------------------------------------------------------------------------------
+; mChainDLI 
+;
+; Use after a DLI to exit and change DLI vector to new address.
+;
+; It will only update the low byte/high byte of the vector when 
+; they are different. 
+;
+; Restore Accumulator from stack.
+;
+; Exits interrupt with RTI.
+;-------------------------------------------------------------------------------
+
+.macro mChainDLI ; current_DLI,next_DLI
+	.if :0<>2
+		.error "mChainDLI: 2 arguments required (Current DLI, Next DLI)
+	.endif
+
+	; If the same, then no need to change low byte.
+	.if [:current_DLI&$FF]<>[:next_DLI&FF] 
+		lda #<:next_DLI ; Low byte of next DLI address
+		sta VDSLST      ; Set vector
+	.endif
+
+	; If the same, then no need to change high byte.
+	.if [:current_DLI&$FF00]<>[:next_DLI&FF00] 
+		lda #>:next_DLI ; High byte of next DLI address
+		sta VDSLST+1    ; Set vector
+	.endif
+
+	pla ; restore A from stack
+	rti ; DLI complete
+.endm
 
 
 ;===============================================================================
@@ -387,12 +331,12 @@
 ; diagnostic screen memory intended for display on the screen. 
 ;-------------------------------------------------------------------------------
 
-.macro mDebugByte  ; Address, position offset
-	.if %0<>2
+.macro mDebugByte address,xpos_offset
+	.if :0<>2
 		.error "DebugByte: 2 arguments (address, screen X position) required."
 	.else
-		lda %1   ; Load byte in address
-		ldy #%2  ; Load screen line X offset.
+		lda :address      ; Load byte in address
+		ldy #:xpos_offset ; Load screen line X offset.
 		jsr DiagByte
 	.endif
 .endm
