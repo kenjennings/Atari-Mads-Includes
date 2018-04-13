@@ -4,24 +4,6 @@
 
 ; Color constants are supplied by GTIA.asm.  See mScreenSetColors for details.
 
-;Black           = 0
-;White           = 1
-;Red             = 2
-;Cyan            = 3 
-;Purple          = 4
-;Green           = 5
-;Blue            = 6
-;Yellow          = 7
-;Orange          = 8
-;Brown           = 9
-;LightRed        = 10
-;DarkGray        = 11
-;MediumGray      = 12
-;LightGreen      = 13
-;LightBlue       = 14
-;LightGray       = 15
-;SpaceCharacter  = 32
-
 SpaceATASCII    = $20
 SpaceScreenCode = $00
 
@@ -96,16 +78,36 @@ True            = 1
 	.if :0<>5
 		.error "mScreenSetColors: 5 arguments (Background color, Color 0, Color 1, Color 2, Color 3) required."
 	.else
-        lda #:1                 ; Background -> A
-        sta COLOR4              ; A -> COLOR4
-        lda #:2                 ; Color0 -> A
-        sta COLOR0              ; A -> COLOR0
-        lda #:3                 ; Color1 -> A
-        sta COLOR1              ; A -> COLOR1
-        lda #:4                 ; Color2 -> A
-        sta COLOR2              ; A -> COLOR2
-        lda #:5                 ; Color3 -> A
-        sta COLOR3              ; A -> COLOR3
+        lda #:cBack   ; Background -> A
+        sta COLOR4    ; A -> COLOR4
+        lda #:col0    ; Color0 -> A
+        sta COLOR0    ; A -> COLOR0
+        lda #:col1    ; Color1 -> A
+        sta COLOR1    ; A -> COLOR1
+        lda #:col2    ; Color2 -> A
+        sta COLOR2    ; A -> COLOR2
+        lda #:col3    ; Color3 -> A
+        sta COLOR3    ; A -> COLOR3
+	.endif
+.endm
+
+
+; Same as above, but gets values from memory.
+
+.macro mScreenSetColors_M cBack,col0,col1,col2,col3
+	.if :0<>5
+		.error "mScreenSetColors_M: 5 arguments (Background color, Color 0, Color 1, Color 2, Color 3) required."
+	.else
+        lda :cBack    ; Background -> A
+        sta COLOR4    ; A -> COLOR4
+        lda :col0     ; Color0 -> A
+        sta COLOR0    ; A -> COLOR0
+        lda :col1     ; Color1 -> A
+        sta COLOR1    ; A -> COLOR1
+        lda :col2     ; Color2 -> A
+        sta COLOR2    ; A -> COLOR2
+        lda :col3     ; Color3 -> A
+        sta COLOR3    ; A -> COLOR3
 	.endif
 .endm
 
