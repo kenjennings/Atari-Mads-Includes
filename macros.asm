@@ -108,10 +108,10 @@
 		.if :value>$FF
 			.error "DiskPoke: Agument 2 for byte value is greater then $FF"
 		.else
-			DISKPOKE_TEMP .= *
-			*=:address
+			DISKPOKE_TEMP =*
+			ORG :address
 			.byte :value
-			*=DISKPOKE_TEMP
+			ORG DISKPOKE_TEMP
 		.endif
 	.endif
 .endm 
@@ -129,10 +129,10 @@
 	.if :0<>2
 		.error "DiskDPoke: 2 arguments (target addr, integer value) required."
 	.else
-		DISKDPOKE_TEMP .= *
-		*=:address
+		DISKDPOKE_TEMP =*
+		ORG :address
 		.word :value
-		*=DISKDPOKE_TEMP
+		ORG DISKDPOKE_TEMP
 	.endif
 .endm 
 
