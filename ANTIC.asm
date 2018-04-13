@@ -171,5 +171,5 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 	; Byte for Mode plus LMS option.  And then the screen memory address.
 	.byte :mode|DL_LMS
-	.word :screenMem   
+	.word :screenMemory   
 .endm
