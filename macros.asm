@@ -125,7 +125,7 @@
 ; memory location at the program load time.
 ;-------------------------------------------------------------------------------
 
-.macro mDiskDPoke addres,value
+.macro mDiskDPoke address,value
 	.if :0<>2
 		.error "DiskDPoke: 2 arguments (target addr, integer value) required."
 	.else
