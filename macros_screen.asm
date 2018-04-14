@@ -1,4 +1,3 @@
-
 ;===============================================================================
 ; Constants
 
@@ -16,39 +15,34 @@ True            = 1
 
 
 ;==============================================================================
-; Originally: LIBSCREEN_SET1000
+; mScreenFillMem
 ;
-; It is like a generic routine to clear memory, but it specifically sets 
-; 1,000 sequential bytes, and it is only used to clear screen RAM and 
-; Color RAM on the C64.  
+; warpper to call library routine ScreenFillMem.
 ;
-; Since the Atari doesn't use color RAM, the only purpose left is screen 
-; RAM, so this can be a dedicated routine.
-;
-; Fill screen memory with a specific byte. 
+; mScreenFillMem is like a generic routine to clear memory, but it 
+; specifically sets 1,040 sequential bytes for screen memory.
 ;
 ; Arguments:
-; 1 = Value (byte value to fill screen memory)
-
-;DO_ScreenFillMem .= 0
+; 1 = Value (byte value to fill screen memory).
+; If Value is greater the 255 it assumes the value is the memeory location
+; containing the byte to use for screen memory.
 
 .macro mScreenFillMem fillByte
 	.if :0<>1
 		.error "mScreenFillMem: 1 argument (byte to fill) required."
 	.else
 		.if :fillByte<256
-;			DO_ScreenFillMem .= 1
 			lda #:fillByte
-			jsr ScreenFillMem
 		.else
-			.error "mScreenFillMem: argument 1 for fill byte must be a byte value."
+			lda :fillByte
 		.endif
+		jsr ScreenFillMem
 	.endif
 .endm
 
 
 ;===============================================================================
-; Originally: LIBSCREEN_SETCOLORS 
+; mScreenSetColors
 ;
 ; Atari Background and C64 Background/Border are different.
 ; In the Atari's multi-color text mode any empty space is the "background" 
@@ -58,7 +52,7 @@ True            = 1
 ; behind text.
 ;
 ; Note that the values are going into the OS shadow registers, which the OS
-; will copt to the hardware registers during the Vertical Blank.
+; will copy to the hardware registers during the Vertical Blank.
 ;
 ; Color specifications are different as the Atari has 128 colors to 
 ; the C64s 16.  GTIA.asm provides 16 base color definitions in the high
@@ -92,7 +86,11 @@ True            = 1
 .endm
 
 
-; Same as above, but gets values from memory.
+;===============================================================================
+; mScreenSetColors
+;
+; Same as above, but instead of using constant value it 
+; gets its color values from memory.
 
 .macro mScreenSetColors_M cBack,col0,col1,col2,col3
 	.if :0<>5
@@ -113,20 +111,17 @@ True            = 1
 
 
 ;==============================================================================
-; Originally LIBSCREEN_SETMULTICOLORMODE
+; mScreenSetMode
 ;
 ; Change all the instructions in the library's Display List to 
 ; a different (and vertically compatible) display mode.
 ; Modes 2, 4, and 6 are supported.
-
-;DO_ScreenSetMode .= 0
 
 .macro mScreenSetMode modeNum
 	.if :0<>1
 		.error "mScreenSetMode: 1 argument (mode 2, 4, or 6) required."
 	.else
 		.if :modNum=2 .or :modNum=4 .or :modNum=6
-;			DO_ScreenSetMode .= 1
 			lda #:modNum
 			jsr ScreenSetMode
 		.else
@@ -137,6 +132,8 @@ True            = 1
 
 
 ;===============================================================================
+; mScreenWaitScanLine
+;
 ; Wait until ANTIC's scanline counter reaches a specific line.
 ; Nothing clever here to skip waiting if the scanline has already 
 ; passed in the current frame.
@@ -146,13 +143,10 @@ True            = 1
 ; depend on the 6502 monitoring the scanline to make display-oriented 
 ; interrupts stable.
 
-;DO_ScreenWaitScanLine .= 0
-
 .macro mScreenWaitScanLine scanLine
 	.if :0<>1
 		.error "mScreenSetColors: 1 argument (Target scanline value) required."
 	.else
-;		DO_ScreenWaitScanLine .= 1
         lda #:scanLine                 ; Target Scanline
         jsr ScreenWaitScanLine 
 	.endif
@@ -160,6 +154,8 @@ True            = 1
 
 
 ;===============================================================================
+; mScreenWaitFrames
+; 
 ; Wait for a number of screen display frames to finish.  
 ; This works by monitoring the jiffy clock that is updated by the 
 ; Operating System's Vertical Blank Interrupt.   When the clock 
@@ -168,16 +164,12 @@ True            = 1
 ; Wait for the current frame to change:  mScreenWaitFrames 1   which is 
 ; the same as calling the base routine directly, jsr ScreenWaitFrame
 
-;DO_ScreenWaitFrames .= 0
-
 .macro mScreenWaitFrames frameCount
 	.if :0<>1
 		.error "mScreenWaitFrames: 1 argument (Number of Frames) required."
 	.else
-;		DO_ScreenWaitFrames .= 1
         lda #:frameCount       ; Number of frames
         jsr ScreenWaitFrames 
 	.endif
 .endm
-
 
