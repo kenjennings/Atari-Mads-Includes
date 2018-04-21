@@ -1,3 +1,4 @@
+;=================================================
 ; GTIA register list
 ; For Mads assembler
 ; Ken Jennings

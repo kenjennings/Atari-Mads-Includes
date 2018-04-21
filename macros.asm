@@ -12,9 +12,9 @@
 ;===============================================================================
 
 ;-------------------------------------------------------------------------------
-;                                                                  LOADINT   A
+;                                                                LOADINT_M   A
 ;-------------------------------------------------------------------------------
-; mLoadInt <Destination Address>, <Source Address>
+; mLoadInt_M <Destination Address>, <Source Address>
 ;
 ; Loads the 16-bit value stored at <Source Address> into <Destination Address>.
 ; 
@@ -24,9 +24,9 @@
 ; Like (in C):  C = D.
 ;-------------------------------------------------------------------------------
 
-.macro mLoadInt target,source
+.macro mLoadInt_M target,source
 	.IF :0<>2
-		.ERROR "LoadInt: 2 arguments (target addr, source addr) required."
+		.ERROR "LoadInt_M: 2 arguments (target addr, source addr) required."
 	.ELSE
 		lda :source
 		sta :target
@@ -36,11 +36,11 @@
 .endm
 
 ;-------------------------------------------------------------------------------
-;                                                                  LOADINTP  A
+;                                                                LOADINT_V  A
 ;-------------------------------------------------------------------------------
-; mLoadIntP <Destination Address>, <Value/Address/Pointer>
+; mLoadInt_V <Destination Address>, <Value>
 ;
-; Loads the immediate 16-bit <Value/Address/Pointer> into <Destination Address>.
+; Loads the immediate 16-bit <Value> into <Destination Address>.
 ; 
 ; Can be used to assign an address to a page 0 location for 
 ; later indirect addressing.
@@ -50,13 +50,13 @@
 ;  C = &D
 ;-------------------------------------------------------------------------------
 
-.macro mLoadIntP target,value
+.macro mLoadInt_V target,value
 	.if :0<>2
-		.error "LoadIntP: 2 arguments (target addr, 16-bit value) required."
+		.error "LoadInt_V: 2 arguments (target addr, 16-bit value) required."
 	.else
-		lda #<:source
+		lda #<:value
 		sta :target
-		lda #>:source
+		lda #>:value
 		sta :target + 1
 	.endif
 .endm
@@ -149,118 +149,124 @@
 ;===============================================================================
 
 ;-------------------------------------------------------------------------------
-;                                                                  SAVEAY A Y
+;                                                               REGSAVEAY A Y
 ;-------------------------------------------------------------------------------
-; mSaveAY 
+; mRegSaveAY 
 ;
 ; Save A, Y CPU registers on stack. 
 ;-------------------------------------------------------------------------------
 
-.macro mSaveAY 
+.macro mRegSaveAY 
 	PHA 
 	TYA 
 	PHA  
-
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                                  SAVEAX A X
+;                                                               REGSAVEAX A X
 ;-------------------------------------------------------------------------------
-; mSaveAX
+; mRegSaveAX
 ;
-; Save A, Y CPU registers on stack. 
+; Save A, X CPU registers on stack. 
 ;-------------------------------------------------------------------------------
 
-.macro mSaveAX
+.macro mRegSaveAX
 	PHA 
 	TXA 
 	PHA  
-
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                                  SAVEAYX A Y X
+;                                                               REGSAVEAYX A Y X
 ;-------------------------------------------------------------------------------
-; mSaveAYX 
+; mRegSaveAYX 
 ;
 ; Save A, Y, X CPU registers on stack. 
 ;-------------------------------------------------------------------------------
 
-.macro mSaveAYX 
+.macro mRegSaveAYX 
 	PHA 
 	TYA 
 	PHA 
 	TXA 
 	PHA 
-
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                                  RESTOREAY A Y
+;                                                               REGRESTOREAY A Y
 ;-------------------------------------------------------------------------------
-; mRestoreAY
+; mRegRestoreAY
 ;
 ; Restore A, Y CPU registers from stack. 
 ;-------------------------------------------------------------------------------
 
-.macro mRestoreAY  
+.macro mRegRestoreAY  
 	PLA 
 	TAY 
 	PLA 
-
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                                  RESTOREAX A X
+;                                                               REGRESTOREAX A X
 ;-------------------------------------------------------------------------------
-; mRestoreAX
+; mRegRestoreAX
 ;
 ; Restore A, X CPU registers from stack. 
 ;-------------------------------------------------------------------------------
 
-.macro mRestoreAX 
+.macro mRegRestoreAX 
 	PLA 
 	TAX 
 	PLA 
-
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                               RESTOREAYX A X Y
+;                                                            REGRESTOREAYX A X Y
 ;-------------------------------------------------------------------------------
-; mRestoreAYX 
+; mRegRestoreAYX 
 ;
 ; Restore A, Y, X CPU registers from stack. 
 ;-------------------------------------------------------------------------------
 
-.macro mRestoreAYX 
+.macro mRegRestoreAYX 
 	PLA 
 	TAX 
 	PLA 
 	TAY 
 	PLA 
-
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                               SAVEREGS A X Y P
+;                                                               REGSAVE P A Y X
 ;-------------------------------------------------------------------------------
-; usage :
-; mSaveRegs 
+; mRegSave 
 ;
 ; Saves the CPU registers so subroutines do not disturb the 
 ; register states and logic/flow of the main code.
 ;-------------------------------------------------------------------------------
 
-.macro mSaveRegs  
+.macro mRegSave  
 	PHP 
-	mSaveAYX
+	mRegSaveAYX
 .endm 
 
 ;-------------------------------------------------------------------------------
-;                                                                SAFERTS A X Y P
+;                                                            REGRESTORE X Y A P
 ;-------------------------------------------------------------------------------
-; mSafeRTS 
+; mRegRestore 
+;
+; Restore A, Y, X CPU registers from stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegRestore 
+	mRegRestoreAYX
+	PLP 
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                             REGSAFERTS A X Y P
+;-------------------------------------------------------------------------------
+; mRegSafeRTS 
 ;
 ; Restores CPU registers for safe return from a routine 
 ; that used saveRegs to preserve the CPU registers.
@@ -268,9 +274,8 @@
 ; Includes the RTS.
 ;-------------------------------------------------------------------------------
 
-.macro mSafeRTS  
-	mRestoreAYX
-	PLP 
+.macro mRegSafeRTS  
+	mRegRestore
 	
 	RTS 
 .endm 
@@ -296,13 +301,13 @@
 	.endif
 
 	; If the same, then no need to change low byte.
-	.if [:current_DLI&$FF]<>[:next_DLI&FF] 
+	.if [<:current_DLI]<>[<:next_DLI] 
 		lda #<:next_DLI ; Low byte of next DLI address
 		sta VDSLST      ; Set vector
 	.endif
 
 	; If the same, then no need to change high byte.
-	.if [:current_DLI&$FF00]<>[:next_DLI&FF00] 
+	.if [>:current_DLI]<>[>:next_DLI] 
 		lda #>:next_DLI ; High byte of next DLI address
 		sta VDSLST+1    ; Set vector
 	.endif
@@ -311,33 +316,4 @@
 	rti ; DLI complete
 .endm
 
-
-;===============================================================================
-; ****   ******   **    *****
-; ** **    **    ****  **  
-; **  **   **   **  ** **
-; **  **   **   **  ** ** ***
-; ** **    **   ****** **  **
-; ****   ****** **  **  *****
-;===============================================================================
-
-;-------------------------------------------------------------------------------
-;                                                               DEBUGBYTE    A Y
-;-------------------------------------------------------------------------------
-; mDebugByte <Address>, <X position>
-;
-; Calls the DiagByte routine to convert a byte into the two-byte, 
-; hex representation and write this to a position in the 
-; diagnostic screen memory intended for display on the screen. 
-;-------------------------------------------------------------------------------
-
-.macro mDebugByte address,xpos_offset
-	.if :0<>2
-		.error "DebugByte: 2 arguments (address, screen X position) required."
-	.else
-		lda :address      ; Load byte in address
-		ldy #:xpos_offset ; Load screen line X offset.
-		jsr DiagByte
-	.endif
-.endm
 

@@ -1,7 +1,8 @@
+;===============================================================================
 ; ANTIC register list
 ; For Mads assembler
 ; Ken Jennings
-;=================================================
+;===============================================================================
 ; Hardware Registers
 ;
 DMACTL = $D400 ; DMA control for display and Player/Missile graphics
@@ -19,7 +20,8 @@ PENV =   $D40D ; (Read) Light Pen Vertical Position
 NMIEN =  $D40E ; Non-Maskable Interupt (NMI) Enable
 NMIRES = $D40F ; Non-Maskable Interrupt (NMI) Reset
 NMIST =  $D40F ; (Read) Non-Maskable Interrupt Status
-;=================================================
+;
+;-------------------------------------------------------------------------------
 ; Shadow Registers for Hardware Registers
 ;
 SDMCTL = $022F ; DMACTL
@@ -31,7 +33,8 @@ CHART = $02F3 ; CHACTL
 ;
 LPENH = $0234 ; (Read) PENH
 LPENV = $0235 ; (Read) PENV
-;=================================================
+;
+;-------------------------------------------------------------------------------
 ; Important Bit Positions
 ;
 ; DMACTL and SDMCTL - DMA control for display and Player/Missile graphics
@@ -147,6 +150,8 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ;
 ; Macros 
 ;
+;-------------------------------------------------------------------------------
+; 																	DL_LMS 
 ;-------------------------------------------------------------------------------
 ; mDL_LMS <DLmode>, <Address>
 ;
