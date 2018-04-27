@@ -1,4 +1,5 @@
-; OS memory and vectors
+;=================================================
+; DOS memory and vectors
 ; For Mads assembler
 ; Ken Jennings
 ;=================================================
