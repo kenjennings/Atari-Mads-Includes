@@ -41,11 +41,7 @@ TRUE            = 1
 	.if :0<>1
 		.error "mScreenFillMem: 1 argument (byte to fill) required."
 	.else
-		.if :fillByte<256
-			lda #:fillByte
-		.else
-			lda :fillByte
-		.endif
+		mLDA_VM :fillByte
 		jsr libScreenFillMem
 	.endif
 .endm
@@ -149,7 +145,7 @@ TRUE            = 1
 	.endif
 .endm
 
-\
+
 ;------------------------------------------------------------------------------
 ; 							SCREENCHANGEMODEINSTRUCTION_M
 ;------------------------------------------------------------------------------

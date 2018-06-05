@@ -6,6 +6,52 @@
 ;===============================================================================
 
 ;===============================================================================
+; The Basic Choice - (paper or plastic?)
+;===============================================================================
+; Load an explicit value or load from memeory?
+; This means do not use page 0 references which would 
+; be considered values less than 256, and the 
+; address would be loaded as an explit value instead.
+; (Which could be useful if you know what you're doing).
+;===============================================================================
+
+.macro mLDA_VM value
+	.if :0<>1
+		.error "LDA_VM: 1 argument required"
+	.else
+		.if :value>$FF
+			lda :value  ; get from memory
+		.else
+			lda #:value ; Get constant value
+		.endif
+	.endif
+.endm
+
+.macro mLDX_VM value
+	.if :0<>1
+		.error "LDX_VM: 1 argument required"
+	.else
+		.if :value>$FF
+			ldx :value  ; get from memory
+		.else
+			ldx #:value ; Get constant value
+		.endif
+	.endif
+.endm
+
+.macro mLDY_VM value
+	.if :0<>1
+		.error "LDY_VM: 1 argument required"
+	.else
+		.if :value>$FF
+			ldy :value  ; get from memory
+		.else
+			ldy #:value ; Get constant value
+		.endif
+	.endif
+.endm
+
+;===============================================================================
 ; 16-BIT LOADS
 ;===============================================================================
 ; Load/move 16-bit values
