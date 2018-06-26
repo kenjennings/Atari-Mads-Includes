@@ -72,7 +72,7 @@ HITCLR = $D01E ; Clear Player/Missile Collisions
 CONSOL = $D01F ; (Read) Start, Select, Option console keys.
 CONSPK = $D01F ; Console speaker.
 ;=================================================
-; Shadow Registers for Hardware Registers
+; OS Shadow Registers for Hardware Registers
 ;
 STRIG0 = $0284 ; (Read) TRIG0 - Joystick 0 trigger
 STRIG1 = $0285 ; (Read) TRIG1 - Joystick 1 trigger
@@ -86,9 +86,9 @@ PCOLOR3 = $02C3 ; COLPM3 - Player/Missile 3 color, GTIA 9-color playfield color 
 ;
 COLOR0 =  $02C4 ; COLPF0 - Playfield 0 color
 COLOR1 =  $02C5 ; COLPF1 - Playfield 1 color
-COLOR2 =  $02C6 ; COLPF2 - Playfield 2 color
+COLOR2 =  $02C6 ; COLPF2 - Playfield 2 color (Background for ANTIC modes 2, 3, and F)
 COLOR3 =  $02C7 ; COLPF3 - Playfield 3 color (and fifth Player color)
-COLOR4 =  $02C8 ; COLBK  - Playfield Background color
+COLOR4 =  $02C8 ; COLBK  - Playfield Background color (Border for modes 2, 3, and F)
 ;
 GPRIOR = $026F ; PRIOR - Control Priority, Fifth Player and GTIA modes
 ;=================================================
@@ -161,7 +161,7 @@ GTIA_MODE_16_COLOR = %11000000 ; 16 hues of brigntess of background color (COLBK
 ;|            |   PF1   |   PF3   |   PM1   |   PM3   |   PM3   |
 ;|            |   PF2   |   PM2   |   PM2   |   PF2   |   PF2   |
 ;|            |   PF3   |   PM3   |   PM3   |   PF3   |   PF3   |
-;|     Bottom |	 COLBK  |  COLBK  |  COLBK  |  COLBK  |  COLBK  |
+;|     Bottom |  COLBK  |  COLBK  |  COLBK  |  COLBK  |  COLBK  |
 ;+============+=========+=========+=========+=========+=========+
 ;
 ; * $0 is Special: 
@@ -200,7 +200,9 @@ ENABLE_MISSILES =      %00000001 ; Enable Missile DMA to GRAFM register
 ENABLE_PLAYERS =       %00000010 ; Enable Player DMA to GRAFPx registers
 TRIGGER_LATCH =        %00000100 ; Enable joystick trigger latching
 ;
-; CONSOL and CONSPK - 0 is key pressed
+; CONSOL and CONSPK
+; 0 bit is key pressed, so AND "masking" is not really useful.
+; Better to just AND with the single bit for each of the 3 keys.
 ;
 MASK_CONSOLE_KEYS =    %11111000
 MASK_CONSOLE_START =   %11111110 ; Start button
@@ -208,10 +210,11 @@ MASK_CONSOLE_SELECT =  %11111101 ; Select button
 MASK_CONSOLE_OPTION =  %11111011 ; Option button
 MASK_CONSOLE_SPEAKER = %11110111 ; (Write) Keyboard speaker
 ;
+CONSOLE_KEYS =         %00000111 ; Capture only the function keys.
 CONSOLE_START =        %00000001 ; Start button
 CONSOLE_SELECT =       %00000010 ; Select button
 CONSOLE_OPTION =       %00000100 ; Option button
-CONSOLE_SPEAKER =      %00001000 ; (Wrie) Keyboard speaker
+CONSOLE_SPEAKER =      %00001000 ; (Write) Keyboard speaker
 
 ;=================================================
 ; Other Value Lists 
@@ -256,7 +259,7 @@ PM_1LINE_NORMAL_TOP =      $20 ; For default OS 192 scan line display
 PM_1LINE_NORMAL_BOTTOM =   $DF ; For default OS 192 scan line display
 PM_1LINE_OVERSCAN_BOTTOM = $F7
 ;
-; Helpful Colors. (Sort of. Your TV mileage my vary.)
+; Helpful Colors. (Sort of. Your TV mileage may vary.)
 ;
 COLOR_GREY =         $00 ; From black to white - That averages to grey, right?
 ; Some also like to think of the first color value as black.
