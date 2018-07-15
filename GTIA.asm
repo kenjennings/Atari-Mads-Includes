@@ -58,7 +58,7 @@ COLPF2 = $D018 ; Playfield 2 color
 COLPF3 = $D019 ; Playfield 3 color (and fifth Player color)
 COLBK =  $D01A ; Playfield Background color
 ;
-TRIG0 =  $D010 ; (Read) Joystick 0 trigger
+TRIG0 =  $D010 ; (Read) Joystick 0 trigger  (0 is pressed. 1 is not pressed)
 TRIG1 =  $D011 ; (Read) Joystick 1 trigger
 TRIG2 =  $D012 ; (Read) Joystick 2 trigger
 TRIG3 =  $D013 ; (Read) Joystick 3 trigger
@@ -74,7 +74,7 @@ CONSPK = $D01F ; Console speaker.
 ;=================================================
 ; OS Shadow Registers for Hardware Registers
 ;
-STRIG0 = $0284 ; (Read) TRIG0 - Joystick 0 trigger
+STRIG0 = $0284 ; (Read) TRIG0 - Joystick 0 trigger (0 is pressed. 1 is not pressed)
 STRIG1 = $0285 ; (Read) TRIG1 - Joystick 1 trigger
 STRIG2 = $0286 ; (Read) TRIG2 - Joystick 2 trigger
 STRIG3 = $0287 ; (Read) TRIG3 - Joystick 3 trigger

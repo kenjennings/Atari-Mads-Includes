@@ -31,6 +31,7 @@ PTRIG7 = $0283
 MASK_JACK_1_3 = %00001111 ; Actually the anti-mask.  Keeps bits from first controller in pair.
 MASK_JACK_2_4 = %11110000 ; The inverse of mask.  Keeps bits from second controller in pair.
 ;
+; Note that 0 bit is pressed.  1 bit is not pressed.
 ; Stick's bits in the high nybble should be right shifted into the low nybble for testing.
 ; Or just use the STICKx shadow register as that is its purpose.  
 ; Bits for STICKx shadow regs below:
@@ -39,7 +40,7 @@ MASK_STICK_LEFT =  %11111011
 MASK_SITCK_UP =    %11111101
 MASK_STICK_DOWN =  %11111110
 ;
-STICK_RIGHT = %00001000
+STICK_RIGHT = %00001000 ; AND STICKx with these. If 0, then pressed. If 1, then not pressed.
 STICK_LEFT =  %00000100
 SITCK_UP =    %00000010
 STICK_DOWN =  %00000001
