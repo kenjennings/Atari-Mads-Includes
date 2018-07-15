@@ -28,11 +28,18 @@ PTRIG7 = $0283
 ;=================================================
 ; Important Bit Positions
 ;
-MASK_JACK_1_3 = %00001111 ; Actually the anti-mask.  Keeps bits from first controller in pair.
-MASK_JACK_2_4 = %11110000 ; The inverse of mask.  Keeps bits from second controller in pair.
+; MASK_JACK is about referencing the actual hardware registers.
+; When reading the joysticks it is much more simple to refer 
+; to the OS STICKx values.
+MASK_JACK_1 = %00001111 ; Actually the anti-mask.  Keeps bits from first controller in pair.
+MASK_JACK_2 = %11110000 ; The inverse of mask.  Keeps bits from second controller in pair.
+MASK_JACK_3 = %00001111 ; Actually the anti-mask.  Keeps bits from first controller in pair.
+MASK_JACK_4 = %11110000 ; The inverse of mask.  Keeps bits from second controller in pair.
 ;
 ; Note that 0 bit is pressed.  1 bit is not pressed.
-; Stick's bits in the high nybble should be right shifted into the low nybble for testing.
+; Reading "JACK" registers gives two joystick values.  
+; The Joystick's bits in the high nybble should be right shifted 
+; into the low nybble for testing.
 ; Or just use the STICKx shadow register as that is its purpose.  
 ; Bits for STICKx shadow regs below:
 MASK_STICK_RIGHT = %11110111
