@@ -29,8 +29,10 @@ PTRIG7 = $0283
 ; Important Bit Positions
 ;
 ; MASK_JACK is about referencing the actual hardware registers.
-; When reading the joysticks it is much more simple to refer 
-; to the OS STICKx values.
+; You can do this if you want to, however the OS already separates 
+; the joysticks into individual OS register value (STICKx), so
+; there's not a lot of reason to read the joystick 
+; hardware directly.
 MASK_JACK_1 = %00001111 ; Actually the anti-mask.  Keeps bits from first controller in pair.
 MASK_JACK_2 = %11110000 ; The inverse of mask.  Keeps bits from second controller in pair.
 MASK_JACK_3 = %00001111 ; Actually the anti-mask.  Keeps bits from first controller in pair.
@@ -47,7 +49,7 @@ MASK_STICK_LEFT =  %11111011
 MASK_SITCK_UP =    %11111101
 MASK_STICK_DOWN =  %11111110
 ;
-STICK_RIGHT = %00001000 ; AND STICKx with these. If 0, then pressed. If 1, then not pressed.
+STICK_RIGHT = %00001000 ; AND with STICKx. If 0, then pressed. If 1, then not pressed.
 STICK_LEFT =  %00000100
 SITCK_UP =    %00000010
 STICK_DOWN =  %00000001
