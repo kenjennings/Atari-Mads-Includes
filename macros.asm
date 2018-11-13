@@ -169,6 +169,10 @@
 ;
 ; Utilize the Atari's structured disk format to load a 16-bit WORD value into a 
 ; memory location at the program load time.
+; 
+; Note that this macro cannot be used until AFTER a valid ORG address is 
+; specified for assembly. If this is not done, then ORG DISKDPOKE_TEMP
+; becomes an error.
 ;-------------------------------------------------------------------------------
 
 .macro mDiskDPoke address,value
