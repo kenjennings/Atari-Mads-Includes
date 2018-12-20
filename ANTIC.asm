@@ -164,7 +164,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ; even (redundantly) the LMS.
 ;-------------------------------------------------------------------------------
 
-.macro mDL_LMS  mode,screenMemory
+.macro mDL_LMS mode,screenMemory
 	.if :0<>2
 		.error "mDL_LMS: 2 arguments required (mode (value of low nybble $2 to $F), screen memory (address)."
 	.endif

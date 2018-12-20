@@ -6,6 +6,151 @@
 ;===============================================================================
 
 ;===============================================================================
+; 6502 REGISTER MAINTENANCE
+;===============================================================================
+; Various shortcuts for managing 6502 A, X, Y registers typically used 
+; when entering/exiting interrupts.  
+;
+; Also, a couple routines for entry/exit from a routine called by JSR to 
+; preserve the registers and CPU flags, so the routine does not affect
+; the caller.
+;===============================================================================
+
+;-------------------------------------------------------------------------------
+;                                                               REGSAVEAY A Y
+;-------------------------------------------------------------------------------
+; mRegSaveAY 
+;
+; Save A, Y CPU registers on stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegSaveAY 
+	PHA 
+	TYA 
+	PHA  
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                               REGSAVEAX A X
+;-------------------------------------------------------------------------------
+; mRegSaveAX
+;
+; Save A, X CPU registers on stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegSaveAX  
+	PHA 
+	TXA 
+	PHA  
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                               REGSAVEAYX A Y X
+;-------------------------------------------------------------------------------
+; mRegSaveAYX 
+;
+; Save A, Y, X CPU registers on stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegSaveAYX  
+	PHA 
+	TYA 
+	PHA 
+	TXA 
+	PHA 
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                               REGRESTOREAY A Y
+;-------------------------------------------------------------------------------
+; mRegRestoreAY
+;
+; Restore A, Y CPU registers from stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegRestoreAY  
+	PLA 
+	TAY 
+	PLA 
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                               REGRESTOREAX A X
+;-------------------------------------------------------------------------------
+; mRegRestoreAX
+;
+; Restore A, X CPU registers from stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegRestoreAX  
+	PLA 
+	TAX 
+	PLA 
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                            REGRESTOREAYX A X Y
+;-------------------------------------------------------------------------------
+; mRegRestoreAYX 
+;
+; Restore A, Y, X CPU registers from stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegRestoreAYX  
+	PLA 
+	TAX 
+	PLA 
+	TAY 
+	PLA 
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                               REGSAVE P A Y X
+;-------------------------------------------------------------------------------
+; mRegSave 
+;
+; Saves the CPU registers so subroutines do not disturb the 
+; register states and logic/flow of the main code.
+;-------------------------------------------------------------------------------
+
+.macro mRegSave  
+	PHP 
+	
+	mRegSaveAYX
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                            REGRESTORE X Y A P
+;-------------------------------------------------------------------------------
+; mRegRestore 
+;
+; Restore A, Y, X CPU registers from stack. 
+;-------------------------------------------------------------------------------
+
+.macro mRegRestore  
+	mRegRestoreAYX
+	
+	PLP 
+.endm 
+
+;-------------------------------------------------------------------------------
+;                                                             REGSAFERTS A X Y P
+;-------------------------------------------------------------------------------
+; mRegSafeRTS 
+;
+; Restores CPU registers for safe return from a routine 
+; that used saveRegs to preserve the CPU registers.
+;
+; Includes the RTS.
+;-------------------------------------------------------------------------------
+
+.macro mRegSafeRTS  
+	mRegRestore
+	
+	RTS 
+.endm 
+
+;===============================================================================
 ; The Basic Choice - (paper or plastic?)
 ;===============================================================================
 ; Load an explicit value or load from memeory?
@@ -15,7 +160,7 @@
 ; (Which could be useful if you know what you're doing).
 ;===============================================================================
 
-.macro mLDA_VM value
+.macro mLDA_VM  value
 	.if :0<>1
 		.error "LDA_VM: 1 argument required"
 	.else
@@ -27,7 +172,7 @@
 	.endif
 .endm
 
-.macro mLDX_VM value
+.macro mLDX_VM  value
 	.if :0<>1
 		.error "LDX_VM: 1 argument required"
 	.else
@@ -39,7 +184,7 @@
 	.endif
 .endm
 
-.macro mLDY_VM value
+.macro mLDY_VM  value
 	.if :0<>1
 		.error "LDY_VM: 1 argument required"
 	.else
@@ -70,7 +215,7 @@
 ; Like (in C):  C = D.
 ;-------------------------------------------------------------------------------
 
-.macro mLoadInt_M target,source
+.macro mLoadInt_M  target,source
 	.IF :0<>2
 		.ERROR "LoadInt_M: 2 arguments (target addr, source addr) required."
 	.ELSE
@@ -96,7 +241,7 @@
 ;  C = &D
 ;-------------------------------------------------------------------------------
 
-.macro mLoadInt_V target,value
+.macro mLoadInt_V  target,value
 	.if :0<>2
 		.error "LoadInt_V: 2 arguments (target addr, 16-bit value) required."
 	.else
@@ -106,7 +251,6 @@
 		sta :target + 1
 	.endif
 .endm
-
 
 ;===============================================================================
 ; DISK SHENANIGANS
@@ -147,7 +291,7 @@
 ; location at the program load time.
 ;-------------------------------------------------------------------------------
 
-.macro mDiskPoke address,value
+.macro mDiskPoke  address,value
 	.if :0<>2
 		.error "DiskPoke: 2 arguments (target addr, byte value) required."
 	.else
@@ -175,7 +319,7 @@
 ; becomes an error.
 ;-------------------------------------------------------------------------------
 
-.macro mDiskDPoke address,value
+.macro mDiskDPoke  address,value
 	.if :0<>2
 		.error "DiskDPoke: 2 arguments (target addr, integer value) required."
 	.else
@@ -184,150 +328,6 @@
 		.word :value
 		ORG DISKDPOKE_TEMP
 	.endif
-.endm 
-
-
-;===============================================================================
-; 6502 REGISTER MAINTENANCE
-;===============================================================================
-; Various shortcuts for managing 6502 A, X, Y registers typically used 
-; when entering/exiting interrupts.  
-;
-; Also, a couple routines for entry/exit from a routine called by JSR to 
-; preserve the registers and CPU flags, so the routine does not affect
-; the caller.
-;===============================================================================
-
-;-------------------------------------------------------------------------------
-;                                                               REGSAVEAY A Y
-;-------------------------------------------------------------------------------
-; mRegSaveAY 
-;
-; Save A, Y CPU registers on stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegSaveAY 
-	PHA 
-	TYA 
-	PHA  
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                               REGSAVEAX A X
-;-------------------------------------------------------------------------------
-; mRegSaveAX
-;
-; Save A, X CPU registers on stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegSaveAX
-	PHA 
-	TXA 
-	PHA  
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                               REGSAVEAYX A Y X
-;-------------------------------------------------------------------------------
-; mRegSaveAYX 
-;
-; Save A, Y, X CPU registers on stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegSaveAYX 
-	PHA 
-	TYA 
-	PHA 
-	TXA 
-	PHA 
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                               REGRESTOREAY A Y
-;-------------------------------------------------------------------------------
-; mRegRestoreAY
-;
-; Restore A, Y CPU registers from stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegRestoreAY  
-	PLA 
-	TAY 
-	PLA 
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                               REGRESTOREAX A X
-;-------------------------------------------------------------------------------
-; mRegRestoreAX
-;
-; Restore A, X CPU registers from stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegRestoreAX 
-	PLA 
-	TAX 
-	PLA 
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                            REGRESTOREAYX A X Y
-;-------------------------------------------------------------------------------
-; mRegRestoreAYX 
-;
-; Restore A, Y, X CPU registers from stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegRestoreAYX 
-	PLA 
-	TAX 
-	PLA 
-	TAY 
-	PLA 
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                               REGSAVE P A Y X
-;-------------------------------------------------------------------------------
-; mRegSave 
-;
-; Saves the CPU registers so subroutines do not disturb the 
-; register states and logic/flow of the main code.
-;-------------------------------------------------------------------------------
-
-.macro mRegSave  
-	PHP 
-	mRegSaveAYX
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                            REGRESTORE X Y A P
-;-------------------------------------------------------------------------------
-; mRegRestore 
-;
-; Restore A, Y, X CPU registers from stack. 
-;-------------------------------------------------------------------------------
-
-.macro mRegRestore 
-	mRegRestoreAYX
-	PLP 
-.endm 
-
-;-------------------------------------------------------------------------------
-;                                                             REGSAFERTS A X Y P
-;-------------------------------------------------------------------------------
-; mRegSafeRTS 
-;
-; Restores CPU registers for safe return from a routine 
-; that used saveRegs to preserve the CPU registers.
-;
-; Includes the RTS.
-;-------------------------------------------------------------------------------
-
-.macro mRegSafeRTS  
-	mRegRestore
-	
-	RTS 
 .endm 
 
 ;-------------------------------------------------------------------------------
@@ -345,7 +345,7 @@
 ; Exits interrupt with RTI.
 ;-------------------------------------------------------------------------------
 
-.macro mChainDLI ; current_DLI,next_DLI
+.macro mChainDLI  ; current_DLI,next_DLI
 	.if :0<>2
 		.error "mChainDLI: 2 arguments required (Current DLI, Next DLI)
 	.endif
@@ -365,5 +365,4 @@
 	pla ; restore A from stack
 	rti ; DLI complete
 .endm
-
 
