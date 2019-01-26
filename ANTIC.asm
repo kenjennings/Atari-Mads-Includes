@@ -212,7 +212,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 .macro mDL_JVB  screenMemory
 	.if :0<>1
-		.error "mDL_JVP: 1 argument required screen memory (address)."
+		.error "mDL_JVB: 1 argument required screen memory (address)."
 	.endif
 
 	; Byte for JVB.  And then the screen memory address.
