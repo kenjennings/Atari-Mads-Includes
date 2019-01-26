@@ -166,7 +166,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 .macro mDL_LMS  mode,screenMemory
 	.if :0<>2
-		.error "mDL_LMS: 2 arguments required (mode (value of low nybble $2 to $F), screen memory (address)."
+		.error "mDL_LMS: 2 arguments required, mode (value of low nybble $2 to $F), screen memory (address)."
 	.endif
 
 	MDL_TEMP=:mode&$0F
@@ -181,7 +181,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 
 ;-------------------------------------------------------------------------------
-; 																	DL_LMS 
+; 																	DL_JMP
 ;-------------------------------------------------------------------------------
 ; mDL_JMP <Address>
 ;
@@ -191,7 +191,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 .macro mDL_JMP  screenMemory
 	.if :0<>1
-		.error "mDL_JMP: 1 argument required screen memory (address)."
+		.error "mDL_JMP: 1 argument required, screen memory (address)."
 	.endif
 
 	; Byte for JMP.  And then the screen memory address.
@@ -201,7 +201,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 
 ;-------------------------------------------------------------------------------
-; 																	DL_LMS 
+; 																	DL_JVB
 ;-------------------------------------------------------------------------------
 ; mDL_JVB <Address>
 ;
@@ -210,12 +210,12 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ;
 ;-------------------------------------------------------------------------------
 
-.macro mDL_JVB  screenMemory
+.macro mDL_JVB  dlMemory
 	.if :0<>1
-		.error "mDL_JVB: 1 argument required screen memory (address)."
+		.error "mDL_JVB: 1 argument required, display list memory (address)."
 	.endif
 
-	; Byte for JVB.  And then the screen memory address.
+	; Byte for JVB.  And then the display list memory address.
 	.byte DL_JUMP_VB
-	.word :screenMemory   
+	.word :dlMemory   
 .endm
