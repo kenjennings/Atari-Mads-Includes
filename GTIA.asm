@@ -153,14 +153,14 @@ GTIA_MODE_16_COLOR = %11000000 ; 16 hues of brigntess of background color (COLBK
 ;| Priority   | 0 0 0 1 | 0 0 1 0 | 0 1 0 0 | 1 0 0 0 | 0 0 0 0 |
 ;| Bits [3:0] |  = $1   |  = $2   |  = $4   |  = $8   |  = $0*  |
 ;+============+=========+=========+=========+=========+=========+
-;|        Top |   PM0   |   PM0   | P5/PF0  | P5/PF0  |   PM0   |
-;|            |   PM1   |   PM1   |   PF1   |   PF1   |   PM1   |
-;|            |   PM2   | P5/PF0  |   PF2   |   PM0   | P5/PF0  |
-;|            |   PM3   |   PF1   |   PF3   |   PM1   |   PF1   |
-;|            | P5/PF0  |   PF2   |   PM0   |   PM2   |   PM2   |
-;|            |   PF1   |   PF3   |   PM1   |   PM3   |   PM3   |
-;|            |   PF2   |   PM2   |   PM2   |   PF2   |   PF2   |
-;|            |   PF3   |   PM3   |   PM3   |   PF3   |   PF3   |
+;|        Top | PM0     | PM0     | P5/PF0  | P5/PF0  | PM0     |
+;|            | PM1     | PM1     |    PF1  |    PF1  | PM1     |
+;|            | PM2     | P5/PF0  |    PF2  | PM0     | P5/PF0  |
+;|            | PM3     |    PF1  |    PF3  | PM1     |    PF1  |
+;|            | P5/PF0  |    PF2  | PM0     | PM2     | PM2     |
+;|            |    PF1  |    PF3  | PM1     | PM3     | PM3     |
+;|            |    PF2  |  PM2    | PM2     |    PF2  |    PF2  |
+;|            |    PF3  |  PM3    | PM3     |    PF3  |    PF3  |
 ;|     Bottom |  COLBK  |  COLBK  |  COLBK  |  COLBK  |  COLBK  |
 ;+============+=========+=========+=========+=========+=========+
 ;
