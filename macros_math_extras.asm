@@ -1192,8 +1192,8 @@
 				sta :result
 			.endif
 			.if :multiplier=1 ; Double Duh.
-				lda multiplicand
-				sta result
+				lda :multiplicand
+				sta :result
 			.endif
 			.if :multiplier=2
 				mByte_Mult2_M :result,:multiplicand

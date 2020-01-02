@@ -99,7 +99,7 @@ GPRIOR = $026F ; PRIOR - Control Priority, Fifth Player and GTIA modes
 PLAYER_SIZE_BITS = %00000011
 PM_SIZE_NORMAL =   %00000000 ; One color clock per Player/Missile pixel
 PM_SIZE_DOUBLE =   %00000001 ; Two color clocks per Player/Missile pixel
-PM_SIZE_QUAD =     %00000011 ; Four color clocks per Player/Missile pixel
+PM_SIZE_QUAD =     %00000011 ; Fopur color clocks per Player/Missile pixel
 ;
 ; SIZEM and GRAFM (and missile memory)
 ;
