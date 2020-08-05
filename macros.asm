@@ -252,6 +252,133 @@
 	.endif
 .endm
 
+
+
+
+DO NOT USE.
+
+WORK IN PROGRESS.
+
+;===============================================================================
+; BITMAP GYMNASTICS
+;===============================================================================
+; The Atari's fine scrolling can manage large-scale movement of substantial 
+; part of the screen geometry.  However, other more localized or subtle effects 
+; can require moving the actual data within memory.  
+;
+; A common activity is shifting data in screen memory to produce motion 
+; effects.  This can be data for images in the playfield graphics, or 
+; characters, or player/missile graphics.
+;
+; This work to shift values in can be done by code to calculate updates on 
+; demand at run time.  This is usually the least expensive option in terms of 
+; memory and most expensive in terms of execution time.
+;
+; Precalculating all the shifted values minimizes CPU work, but maximizes
+; memory usage creating tables of pre-shifted values.
+;
+; This group of macros helps facilitate calculating tables of pre-shifted data.
+;===============================================================================
+
+;-------------------------------------------------------------------------------
+;                                                          BITMAP16LEFTSHIFTPOS
+;-------------------------------------------------------------------------------
+; mBitmap16LeftShiftPos <16-bit value>, <Position>
+;
+; Output the high byte of the 16-bit value shifted to the specified position.
+;-------------------------------------------------------------------------------
+
+.macro mBitmap16LeftShiftPos value,position
+	.IF :0<>3
+		.ERROR "Bitmap16LeftShiftPos:2 arguments (value, position) required."
+	.ELSE
+		.IF :position<0 .OR :position>8
+			.ERROR "Bitmap16LeftShiftPos: position must be 0 through 8."
+		.ELSE
+			.IF :position==0
+				.byte [:value & $FF00] >> 8
+			.ELSE
+				.byte [[:value << :position] & $FF00 ] >> 8
+			.ENDIF
+		.ENDIF
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                             BITMAP16LEFTSHIFT
+;-------------------------------------------------------------------------------
+; mBitmap16LeftShift <16-bit value>, <Start position>, <End position>
+;
+; Output the high byte of the 16-bit value shifted from the start position
+; to the end position. Position may be 0 to 8.
+; 
+; e.g. %1010101011110000 will result in output:
+;
+; .byte %10101010 ; 0
+; .byte %01010101 ; 1
+; .byte %10101011 ; 2
+; .byte %01010111 ; 3
+; .byte %10101111 ; 4
+; .byte %01011110 ; 5
+; .byte %10111100 ; 6
+; .byte %01111000 ; 7
+; .byte %11110000 ; 8
+;-------------------------------------------------------------------------------
+
+.macro mBitmap16LeftShift value,first,last
+	.IF :0<>3
+		.ERROR "Bitmap16LeftShift:3 arguments (value, first, last) required."
+	.ELSE
+		.IF :first<0 .OR :first>8
+			.ERROR "Bitmap16LeftShift: first position must be 0 through 8."
+		.ELSE
+			.IF :last<0 .OR :last>8
+				.ERROR "Bitmap16LeftShift: last position must be 0 through 8."
+			.ELSE
+				.IF :last<:first
+					.ERROR "Bitmap16LeftShift: last position must be greater than or equal to first position."			
+				.ELSE
+					THISPOSITION=:first
+					.REPT [:last-:first+1],#
+						mBitmap16LeftShiftPos :value,THISPOSITION
+						THISPOSITION=THISPOSITION+1
+					.ENDR
+				.ENDIF
+			.ENDIF
+		.ENDIF
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                              BITMAP16LEFT
+;-------------------------------------------------------------------------------
+; mBitmap16Left <16-bit value>
+;
+; Output the high byte of the 16-bit value shifted 0 to 7 positions left.
+;
+; e.g. %1010101011110000 will result in output:
+;
+; .byte %10101010 ; 0
+; .byte %01010101 ; 1
+; .byte %10101011 ; 2
+; .byte %01010111 ; 3
+; .byte %10101111 ; 4
+; .byte %01011110 ; 5
+; .byte %10111100 ; 6
+; .byte %01111000 ; 7
+;-------------------------------------------------------------------------------
+
+.macro mBitmap16Left value
+	.IF :0<>2
+		.ERROR "Bitmap16Left: 1 argument (value) required."
+	.ELSE
+		mBitmap16LeftShift :value,0,7
+	.ENDIF
+.endm
+
+
 ;===============================================================================
 ; DISK SHENANIGANS
 ;===============================================================================
@@ -345,7 +472,7 @@
 ; Exits interrupt with RTI.
 ;-------------------------------------------------------------------------------
 
-.macro mChainDLI  ; current_DLI,next_DLI
+.macro mChainDLI current_DLI,next_DLI
 	.if :0<>2
 		.error "mChainDLI: 2 arguments required (Current DLI, Next DLI)
 	.endif
@@ -365,150 +492,4 @@
 	pla ; restore A from stack
 	rti ; DLI complete
 .endm
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-DO NOT USE.
-
-WORK IN PROGRESS.
-
-;===============================================================================
-; BITMAP GYMNASTICS
-;===============================================================================
-; The Atari's fine scrolling can manage large-scale movement of substantial 
-; part of the screen geometry.  However, other more localized or subtle effects 
-; can require moving the actual data within memory.  
-;
-; A common activity is shifting data in screen memory to produce motion 
-; effects.  This can be data for images in the playfield graphics, or 
-; characters, or player/missile graphics.
-;
-; This work to shift values in can be done by code to calculate updates on 
-; demand at run time.  This is usually the least expensive option in terms of 
-; memory and most expensive in terms of execution time.
-;
-; Precalculating all the shifted values minimizes CPU work, but maximizes
-; memory usage creating tables of pre-shifted values.
-;
-; This group of macros helps facilitate calculating tables of pre-shifted data.
-;===============================================================================
-
-;-------------------------------------------------------------------------------
-;                                                              BITMAP16LEFT
-;-------------------------------------------------------------------------------
-; mBitmap16Left <16-bit value>
-;
-; Output the high byte of the 16-bit value shifted 0 to 7 positions left.
-;
-; e.g. %1010101011110000 will result in output:
-;
-; .byte %10101010 ; 0
-; .byte %01010101 ; 1
-; .byte %10101011 ; 2
-; .byte %01010111 ; 3
-; .byte %10101111 ; 4
-; .byte %01011110 ; 5
-; .byte %10111100 ; 6
-; .byte %01111000 ; 7
-;-------------------------------------------------------------------------------
-
-.macro mBitmap16Left value
-	.IF :0<>2
-		.ERROR "Bitmap16Left: 1 argument (value) required."
-	.ELSE
-		mBitmap16LeftShift :value,0,7
-	.ENDIF
-.endm
-
-
-;-------------------------------------------------------------------------------
-;                                                             BITMAP16LEFTSHIFT
-;-------------------------------------------------------------------------------
-; mBitmap16LeftShift <16-bit value>, <Start position>, <End position>
-;
-; Output the high byte of the 16-bit value shifted from the start position
-; to the end position. Position may be 0 to 8.
-; 
-; e.g. %1010101011110000 will result in output:
-;
-; .byte %10101010 ; 0
-; .byte %01010101 ; 1
-; .byte %10101011 ; 2
-; .byte %01010111 ; 3
-; .byte %10101111 ; 4
-; .byte %01011110 ; 5
-; .byte %10111100 ; 6
-; .byte %01111000 ; 7
-; .byte %11110000 ; 8
-;-------------------------------------------------------------------------------
-
-.macro mBitmap16LeftShift value,first,last
-	.IF :0<>3
-		.ERROR "Bitmap16LeftShift:3 arguments (value, first, last) required."
-	.ELSE
-		.IF :first<0 .OR :first>8
-			.ERROR "Bitmap16LeftShift: first position must be 0 through 8."
-		.ELSE
-			.IF :last<0 .OR :last>8
-				.ERROR "Bitmap16LeftShift: last position must be 0 through 8."
-			.ELSE
-				.IF :last<:first
-					.ERROR "Bitmap16LeftShift: last position must be greater than or equal to first position."			
-				.ELSE
-					mBitmap16LeftShiftPos :value,:position
-				.ENDIF
-			.ENDIF
-		.ENDIF
-	.ENDIF
-.endm
-
-
-;-------------------------------------------------------------------------------
-;                                                          BITMAP16LEFTSHIFTPOS
-;-------------------------------------------------------------------------------
-; mBitmap16LeftShiftPos <16-bit value>, <Position>
-;
-; Output the high byte of the 16-bit value shifted to the specified position.
-;-------------------------------------------------------------------------------
-
-.macro mBitmap16LeftShiftPos value,first,last
-	.IF :0<>3
-		.ERROR "Bitmap16LeftShiftPos:3 arguments (value, first, last) required."
-	.ELSE
-		.IF :first<0 .OR :first>8
-			.ERROR "Bitmap16LeftShiftPos: first position must be 0 through 8."
-		.ELSE
-			.IF :last<0 .OR :last>8
-				.ERROR "Bitmap16LeftShiftPos: last position must be 0 through 8."
-			.ELSE
-				.IF :last<:first
-					.ERROR "Bitmap16LeftShiftPos: last position must be greater than or equal to first position."			
-				.ELSE
-					mBitmap16LeftShiftPos :value,:position
-				.ENDIF
-			.ENDIF
-		.ENDIF
-	.ENDIF
-.endm
-
-
-
-
 
