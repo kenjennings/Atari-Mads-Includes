@@ -253,12 +253,6 @@
 .endm
 
 
-
-
-DO NOT USE.
-
-WORK IN PROGRESS.
-
 ;===============================================================================
 ; BITMAP GYMNASTICS
 ;===============================================================================
@@ -289,7 +283,7 @@ WORK IN PROGRESS.
 ;-------------------------------------------------------------------------------
 
 .macro mBitmap16LeftShiftPos value,position
-	.IF :0<>3
+	.IF :0<>2
 		.ERROR "Bitmap16LeftShiftPos:2 arguments (value, position) required."
 	.ELSE
 		.IF :position<0 .OR :position>8
@@ -339,10 +333,10 @@ WORK IN PROGRESS.
 				.IF :last<:first
 					.ERROR "Bitmap16LeftShift: last position must be greater than or equal to first position."			
 				.ELSE
-					THISPOSITION=:first
+					?TEMP_POSITION = :first
 					.REPT [:last-:first+1],#
-						mBitmap16LeftShiftPos :value,THISPOSITION
-						THISPOSITION=THISPOSITION+1
+						mBitmap16LeftShiftPos :value,?TEMP_POSITION
+						?TEMP_POSITION++
 					.ENDR
 				.ENDIF
 			.ENDIF
@@ -352,7 +346,7 @@ WORK IN PROGRESS.
 
 
 ;-------------------------------------------------------------------------------
-;                                                              BITMAP16LEFT
+;                                                                  BITMAP16LEFT
 ;-------------------------------------------------------------------------------
 ; mBitmap16Left <16-bit value>
 ;
@@ -371,10 +365,109 @@ WORK IN PROGRESS.
 ;-------------------------------------------------------------------------------
 
 .macro mBitmap16Left value
-	.IF :0<>2
+	.IF :0<>1
 		.ERROR "Bitmap16Left: 1 argument (value) required."
 	.ELSE
 		mBitmap16LeftShift :value,0,7
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                         BITMAP16RIGHTSHIFTPOS
+;-------------------------------------------------------------------------------
+; mBitmap16RightShiftPos <16-bit value>, <Position>
+;
+; Output the low byte of the 16-bit value shifted to the specified position.
+;-------------------------------------------------------------------------------
+
+.macro mBitmap16RightShiftPos value,position
+	.IF :0<>2
+		.ERROR "Bitmap16RightShiftPos:2 arguments (value, position) required."
+	.ELSE
+		.IF :position<0 .OR :position>8
+			.ERROR "Bitmap16RightShiftPos: position must be 0 through 8."
+		.ELSE
+			.IF :position==0
+				.byte >:value
+			.ELSE
+				.byte [:value >> :position] & $FF
+			.ENDIF
+		.ENDIF
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                            BITMAP16RIGHTSHIFT
+;-------------------------------------------------------------------------------
+; mBitmap16RightShift <16-bit value>, <Start position>, <End position>
+;
+; Output the low byte of the 16-bit value shifted from the start position
+; to the end position. Position may be 0 to 8.
+; 
+; e.g. %1010101011110000 will result in output:
+;
+; .byte %11110000 ; 0
+; .byte %01111000 ; 1
+; .byte %10111100 ; 2
+; .byte %01011110 ; 3
+; .byte %10101111 ; 4
+; .byte %01010111 ; 5
+; .byte %10101011 ; 6
+; .byte %01010101 ; 7
+; .byte %10101010 ; 8
+;-------------------------------------------------------------------------------
+
+.macro mBitmap16RightShift value,first,last
+	.IF :0<>3
+		.ERROR "Bitmap16RightShift:3 arguments (value, first, last) required."
+	.ELSE
+		.IF :first<0 .OR :first>8
+			.ERROR "Bitmap16RightShift: first position must be 0 through 8."
+		.ELSE
+			.IF :last<0 .OR :last>8
+				.ERROR "Bitmap16RightShift: last position must be 0 through 8."
+			.ELSE
+				.IF :last<:first
+					.ERROR "Bitmap16RightShift: last position must be greater than or equal to first position."			
+				.ELSE
+					?TEMP_POSITION = :first
+					.REPT [:last-:first+1],#
+						mBitmap16RightShiftPos :value,?TEMP_POSITION
+						?TEMP_POSITION++
+					.ENDR
+				.ENDIF
+			.ENDIF
+		.ENDIF
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                                 BITMAP16RIGHT
+;-------------------------------------------------------------------------------
+; mBitmap16Right <16-bit value>
+;
+; Output the low byte of the 16-bit value shifted 0 to 7 positions left.
+;
+; e.g. %1010101011110000 will result in output:
+;
+; .byte %11110000 ; 0
+; .byte %01111000 ; 1
+; .byte %10111100 ; 2
+; .byte %01011110 ; 3
+; .byte %10101111 ; 4
+; .byte %01010111 ; 5
+; .byte %10101011 ; 6
+; .byte %01010101 ; 7
+;-------------------------------------------------------------------------------
+
+.macro mBitmap16Rightt value
+	.IF :0<>1
+		.ERROR "Bitmap16Right: 1 argument (value) required."
+	.ELSE
+		mBitmap16RightShift :value,0,7
 	.ENDIF
 .endm
 
