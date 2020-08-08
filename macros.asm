@@ -7,6 +7,15 @@
 
 ;===============================================================================
 ; 6502 REGISTER MAINTENANCE
+; LOAD A WRAPPER
+; 16-BIT LOADS
+; BITMAP GYMNASTICS
+; DISK SHENANIGANS
+; DLI CHAINING
+;===============================================================================
+
+;===============================================================================
+; 6502 REGISTER MAINTENANCE
 ;===============================================================================
 ; Various shortcuts for managing 6502 A, X, Y registers typically used 
 ; when entering/exiting interrupts.  
@@ -149,6 +158,7 @@
 	
 	RTS 
 .endm 
+
 
 ;===============================================================================
 ; The Basic Choice - (paper or plastic?)
@@ -463,7 +473,7 @@
 ; .byte %01010101 ; 7
 ;-------------------------------------------------------------------------------
 
-.macro mBitmap16Rightt value
+.macro mBitmap16Right value
 	.IF :0<>1
 		.ERROR "Bitmap16Right: 1 argument (value) required."
 	.ELSE
