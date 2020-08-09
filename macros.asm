@@ -399,7 +399,7 @@
 			.ERROR "Bitmap16RightShiftPos: position must be 0 through 8."
 		.ELSE
 			.IF :position==0
-				.byte >:value
+				.byte <:value
 			.ELSE
 				.byte [:value >> :position] & $FF
 			.ENDIF

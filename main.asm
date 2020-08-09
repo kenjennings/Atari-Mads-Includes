@@ -1,8 +1,9 @@
 ;*******************************************************************************
+;*
 ;* TEST MACROS
 ;*
 ;* Test Atari MADS Includes                     
-;*                                                                             
+;*
 ;*******************************************************************************
 
 ; ==========================================================================
@@ -32,6 +33,7 @@
 
 POS0 .byte $40 ; position of Player
 
+
 ; Now for the Code...
 ; Should be the first usable memory after DOS (and DUP?).
 
@@ -43,17 +45,18 @@ POS0 .byte $40 ; position of Player
 	.by "semiconductor chemistry and physics making all this fun possible. "
 	.by "** Macros Test "
 	.by "** Atari 8-bit computer systems. "
-	.by "** Ken Jennings - 6 Aug 2020 **"
+	.by "** Ken Jennings - Aug 2020 **"
+
 
 	ORG $5000
 
 
-;	.by ........1.1...1.1...1...1.111...11111.1111........  
-;	.by .......1..11..1.1...1..11.1..1..1.....1...1.......
-;	.by ........1.1.1.1.1..1..1.1.1...1.1.11..1...1.......
-;	.by ........1.1..11.1.1..1..1.1...1.1.....1.11........
-;	.by ........1.1...1.11..1.111.1...1.1.....1...1.......
-;	.by ........1.1...1.1...1...1.1.111.11111.1...1.......
+;	.by ........1.1...1.1...1...1.111...11111.1111...... ..  
+;	.by .......1..11..1.1...1..11.1..1..1.....1...1..... ..
+;	.by ........1.1.1.1.1..1..1.1.1...1.1.11..1...1..... ..
+;	.by ........1.1..11.1.1..1..1.1...1.1.....1.11...... ..
+;	.by ........1.1...1.11..1.111.1...1.1.....1...1..... ..
+;	.by ........1.1...1.1...1...1.1.111.11111.1...1..... ..
 
 ; We are trying for only 44 bits shifted 5 * 8 = 40 + 4
 
@@ -141,6 +144,106 @@ PM_TITLE_BITMAP_LINE6 ; .by 00000000 10100010 10001000 10101110 11111010 0010000
 	mBitmap16LeftShift %0010000000000000,0,3 ; 0, 1, 2, 3
 
 
+;	********.*.***.*.***.***.*...***.....*....********  
+;	*******.**..**.*.***.**..*.**.**.*****.***.*******
+;	********.*.*.*.*.**.**.*.*.***.*.*..**.***.*******
+;	********.*.**..*.*.**.**.*.***.*.*****.*..********
+;	********.*.***.*..**.*...*.***.*.*****.***.*******
+;	********.*.***.*.***.***.*.*...*.....*.***.*******
+
+; We are trying for only 44 bits shifted 5 * 8 = 40 + 4
+
+;	.by 11 11111101 01110101 11011101 00011100 00010000 11111111  
+;	.by 11 11111011 00110101 11011001 01101101 11110111 01111111
+;	.by 11 11111101 01010101 10110101 01110101 00110111 01111111
+;	.by 11 11111101 01100101 01101101 01110101 11110100 11111111
+;	.by 11 11111101 01110100 11010001 01110101 11110111 01111111
+;	.by 11 11111101 01110101 11011101 01000100 00010111 01111111
+
+
+PM_TITLE_BITMAP_LINE7 ;	.by 11 11111101 01110101 11011101 00011100 00010000 11111111  
+	mBitmap16Right %0001000011111111 
+
+	mbitmap16Right %0001110000010000
+
+	mbitmap16Right %1101110100011100   
+	
+	mbitmap16Right %0111010111011101  
+
+	mbitmap16Right %1111110101110101
+	
+	mbitmap16RightShift %1111111111111101,0,3 ; 0, 1, 2, 3
+
+
+PM_TITLE_BITMAP_LINE8 ;	.by 11 11111011 00110101 11011001 01101101 11110111 01111111
+	mBitmap16Right %1111011101111111
+
+	mbitmap16Right %0110110111110111
+
+	mbitmap16Right %1101100101101101
+
+	mbitmap16Right %0011010111011001
+
+	mbitmap16Right %1111101100110101
+	
+	mbitmap16RightShift %1111111111111011,0,3 ; 0, 1, 2, 3
+
+
+PM_TITLE_BITMAP_LINE9 ;	.by 11 11111101 01010101 10110101 01110101 00110111 01111111
+	mBitmap16Right %0011011101111111
+
+	mbitmap16Right %0111010100110111
+
+	mbitmap16Right %1011010101110101
+	
+	mbitmap16Right %0101010110110101
+
+	mbitmap16Right %1111110101010101
+	
+	mbitmap16RightShift %1111111111111101,0,3 ; 0, 1, 2, 3
+
+
+PM_TITLE_BITMAP_LINE10 ;	.by 11 11111101 01100101 01101101 01110101 11110100 11111111
+	mBitmap16Right %1111010011111111
+
+	mbitmap16Right %0111010111110100
+
+	mbitmap16Right %0110110101110101
+	
+	mbitmap16Right %0110010101101101
+
+	mbitmap16Right %1111110101100101
+	
+	mbitmap16RightShift %1111111111111101,0,3 ; 0, 1, 2, 3
+
+
+PM_TITLE_BITMAP_LINE11 ;	.by 11 11111101 01110100 11010001 01110101 11110111 01111111
+	mBitmap16Right %1111011101111111
+
+	mbitmap16Right %0111010111110111
+
+	mbitmap16Right %1101000101110101
+	
+	mbitmap16Right %0111010011010001
+
+	mbitmap16Right %1111110101110100
+	
+	mbitmap16RightShift %1111111111111101,0,3 ; 0, 1, 2, 3
+
+
+PM_TITLE_BITMAP_LINE12 ;	.by 11 11111101 01110101 11011101 01000100 00010111 01111111
+	mBitmap16Right %0001011101111111
+
+	mbitmap16Right %0100010000010111
+
+	mbitmap16Right %1101110101000100
+	
+	mbitmap16Right %0111010111011101
+
+	mbitmap16Right %1111110101110101
+	
+	mbitmap16RightShift %1111111111111101,0,3 ; 0, 1, 2, 3
+
 
 
 
@@ -161,9 +264,11 @@ PROGRAM_START
 	lda #PM_SIZE_DOUBLE
 	sta SIZEP0
 
-; Load animation frame intp Player/Missile memory
+; Load animation frames into Player/Missile memory
 
 AnimationLoop
+
+; Left shift animation 
 
 	lda #$40
 	sta POS0 ; Page 0 shadow
@@ -171,7 +276,7 @@ AnimationLoop
 
 	ldy #0
 
-DrawPMGraphicsLoop
+LeftAnimationLoop
 
 	lda POS0
 	sta HPOSP0
@@ -179,62 +284,25 @@ DrawPMGraphicsLoop
 	ldx #128
 
 	lda PM_TITLE_BITMAP_LINE1,Y
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
+	jsr StuffitInPM0
+
 	lda PM_TITLE_BITMAP_LINE2,Y
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
+	jsr StuffitInPM0
+
 	lda PM_TITLE_BITMAP_LINE3,Y
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
+	jsr StuffitInPM0
+
 	lda PM_TITLE_BITMAP_LINE4,Y
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
+	jsr StuffitInPM0
+
 	lda PM_TITLE_BITMAP_LINE5,Y
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
+	jsr StuffitInPM0
+
 	lda PM_TITLE_BITMAP_LINE6,Y
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
-	inx
-	sta PLAYERADR0,X
+	jsr StuffitInPM0
 
-; Wait for 5 jiffy clock ticks.
-
-	ldx #5
-
-ResetClockTick
-	lda #0
-	sta RTCLOK60
-
-WaitForFrame
-	lda RTCLOK60
-	beq WaitForFrame
-
-	dex
-	bne ResetClockTick
-
+	jsr PauseTicks
+	
 ; Update next position of P/M graphics
 
 	inc POS0
@@ -244,10 +312,50 @@ WaitForFrame
 
 	iny
 	cpy #44
-	bne DrawPMGraphicsLoop
+	bne LeftAnimationLoop
 
-; Done.   Reset.   Loop Forever.
+; Done.   Reset.   
 
+; Right shift animation 
+
+	ldy #0
+
+RightAnimationLoop
+
+	dec POS0
+	dec POS0
+		
+	lda POS0
+	sta HPOSP0
+	
+	ldx #128
+
+	lda PM_TITLE_BITMAP_LINE7,Y
+	jsr StuffitInPM0
+
+	lda PM_TITLE_BITMAP_LINE8,Y
+	jsr StuffitInPM0
+
+	lda PM_TITLE_BITMAP_LINE9,Y
+	jsr StuffitInPM0
+
+	lda PM_TITLE_BITMAP_LINE10,Y
+	jsr StuffitInPM0
+
+	lda PM_TITLE_BITMAP_LINE11,Y
+	jsr StuffitInPM0
+
+	lda PM_TITLE_BITMAP_LINE12,Y
+	jsr StuffitInPM0
+
+	jsr PauseTicks
+
+	iny
+	cpy #44
+	bne RightAnimationLoop
+
+; Done.   Reset.   
+	
 	jmp AnimationLoop
 
 Do_While_More_Electricity
@@ -257,12 +365,44 @@ Do_While_More_Electricity
 	rts
 
 
+;==============================================================================
+;												Pause5Ticks  X
+;==============================================================================
+; Pause for a number of vertical blank jiffies.
+; -----------------------------------------------------------------------------
+
+PauseTicks
+	ldx #5
+
+NextClockTick
+	lda RTCLOK60
+
+WaitForFrame
+	cmp RTCLOK60
+	beq WaitForFrame
+
+	dex
+	bne NextClockTick
+
+	rts
 
 
+;==============================================================================
+;												StuffitInPM0  X
+;==============================================================================
+; Given data in  A  write intothe current  X  position and increment 
+; X  for each write.
+; -----------------------------------------------------------------------------
 
+StuffitInPM0
+	sta PLAYERADR0,X
+	inx
+	sta PLAYERADR0,X
+	inx
+	sta PLAYERADR0,X
+	inx
 
-
-
+	rts
 
 
 ;==============================================================================
