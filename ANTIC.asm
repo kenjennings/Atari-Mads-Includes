@@ -151,6 +151,59 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ; Macros 
 ;
 ;-------------------------------------------------------------------------------
+; 																	DL_JMP
+;-------------------------------------------------------------------------------
+; mDL_BLANK <Lines>
+;
+; Declares a Blank line instruction for 1 through 8 blank lines 
+; which should be expressed as DL_BLANK_1 through DL_BLANK_8.
+; Note that "Lines" argument value may include the bit for DLI.
+;
+;-------------------------------------------------------------------------------
+
+.macro mDL_BLANK  lines
+	.if :0<>1
+		.error "mDL_BLANK: 1 argument required, number of blank lines."
+	.endif
+
+	MDL_TEMP=:mode&$0F
+	.if MDL_TEMP>0
+		.error "mDL_BLANK: lines argument must not have bits set in the low nybble."
+	.endif
+
+	; Byte for blank lines instruction.
+	.byte :lines
+
+.endm
+
+
+;-------------------------------------------------------------------------------
+; 																	DL_LMS 
+;-------------------------------------------------------------------------------
+; mDL <DLmode>
+;
+; Declares display list instruction without LMS address operand.
+;
+; Note that this will not verify the LMS bit is off, so that it can 
+; be called by the mDL_LMS macro.  So, potential hole for ugly errors.
+;-------------------------------------------------------------------------------
+
+.macro mDL  mode
+	.if :0<>1
+		.error "mDL: 1 argument required, mode (value of low nybble $2 to $F)."
+	.endif
+
+	MDL_TEMP=:mode&$0F
+	.if MDL_TEMP<DL_TEXT_2
+		.error "mDL: graphics mode argument must have a low nybble value from $2 to $F."
+	.endif
+
+	; Byte for Mode value.
+	.byte :mode  
+.endm
+
+
+;-------------------------------------------------------------------------------
 ; 																	DL_LMS 
 ;-------------------------------------------------------------------------------
 ; mDL_LMS <DLmode>, <Address>
@@ -169,13 +222,8 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 		.error "mDL_LMS: 2 arguments required, mode (value of low nybble $2 to $F), screen memory (address)."
 	.endif
 
-	MDL_TEMP=:mode&$0F
-	.if MDL_TEMP<DL_TEXT_2
-		.error "mDL_LMS: mode argument must be a value from $2 to $F."
-	.endif
-
 	; Byte for Mode plus LMS option.  And then the screen memory address.
-	.byte :mode|DL_LMS
+	mDL :mode|DL_LMS
 	.word :screenMemory   
 .endm
 
