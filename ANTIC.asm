@@ -151,34 +151,60 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ; Macros 
 ;
 ;-------------------------------------------------------------------------------
-; 																	DL_JMP
+;								DL_BLANK
 ;-------------------------------------------------------------------------------
 ; mDL_BLANK <Lines>
 ;
 ; Declares a Blank line instruction for 1 through 8 blank lines 
 ; which should be expressed as DL_BLANK_1 through DL_BLANK_8.
 ; Note that "Lines" argument value may include the bit for DLI.
+; 
+; This may be used one of two ways...
+; The value spacified may be the actual value of the blank line instruction; 
+; OR it may be the simple numeric value 0 to 7 to specify the 1 to 8 scan lines.
+; The DLI bit may be added to either value.
+;
+; So, first, preserve the DLI bit, if present.
+; Next, preserve and separate the  DL_BLANK_X bits ( %01110000) ($70)
+; and the equivalent numeric value (%00000111) ($07).
+;
+; If the known unused bit (%00001000) ($080) is set, then this is an 
+; up front error.
+;
+; If bits are set in the low nybble value and the blank instruction bits are 
+; set, too, then this is a problem.
 ;
 ;-------------------------------------------------------------------------------
 
 .macro mDL_BLANK  lines
 	.if :0<>1
-		.error "mDL_BLANK: 1 argument required, number of blank lines."
+		.error "mDL_BLANK: 1 argument required, number of blank lines 0 to 7."
 	.endif
+	
+	MDL_DLI=:mode&%10000000
+	MDL_UNUSED=:mode&%00001000
+	MDL_HI_NYB=:mode&%01110000
+	MDL_LO_NYB=:mode&%00000111
 
-	MDL_TEMP=:mode&$0F
 	.if MDL_TEMP>0
-		.error "mDL_BLANK: lines argument must not have bits set in the low nybble."
+		.error "mDL_BLANK: lines argument must not have bit %00001000/$080 set."
 	.endif
-
-	; Byte for blank lines instruction.
-	.byte :lines
+	 
+	.if MDL_HI_NYB>0 ; BLANK instruction passed
+		.if MDL_LO_NYB>0 ; Bits are on in the low nybble too.  This is bad.
+			.error "mDL_BLANK: lines argument must not have bits set in the high and low nybbles.  Use 0 to 7."
+		.else ; Bits on in the instruction part.  So, use that
+			.byte MDL_DLI|MDL_HI_NYB
+		.endif
+	.else ; No bits in the Instruction. Assume we're using the 0 to 7 numeric, and multiply to shift bits.
+		.byte MDL_DLI|[MDL_LO_NYB * 16]
+	.endif
 
 .endm
 
 
 ;-------------------------------------------------------------------------------
-; 																	DL_LMS 
+;								DL 
 ;-------------------------------------------------------------------------------
 ; mDL <DLmode>
 ;
@@ -204,7 +230,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 
 ;-------------------------------------------------------------------------------
-; 																	DL_LMS 
+; 								DL_LMS 
 ;-------------------------------------------------------------------------------
 ; mDL_LMS <DLmode>, <Address>
 ;
@@ -229,7 +255,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 
 ;-------------------------------------------------------------------------------
-; 																	DL_JMP
+;								DL_JMP
 ;-------------------------------------------------------------------------------
 ; mDL_JMP <Address>
 ;
@@ -249,7 +275,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 
 ;-------------------------------------------------------------------------------
-; 																	DL_JVB
+; 								DL_JVB
 ;-------------------------------------------------------------------------------
 ; mDL_JVB <Address>
 ;
