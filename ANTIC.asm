@@ -180,24 +180,33 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 	.if :0<>1
 		.error "mDL_BLANK: 1 argument required, number of blank lines 0 to 7."
 	.endif
-	
-	MDL_DLI=:mode&%10000000
-	MDL_UNUSED=:mode&%00001000
-	MDL_HI_NYB=:mode&%01110000
-	MDL_LO_NYB=:mode&%00000111
 
-	.if MDL_TEMP>0
-		.error "mDL_BLANK: lines argument must not have bit %00001000/$080 set."
+;	.print "** mDL_BLANK lines  = ",:lines
+	
+	TEMP_MDL_DLI=[:lines & DL_DLI]
+;	.print "mDL_BLANK DLI    = ",TEMP_MDL_DLI 
+
+	TEMP_MDL_UNUSED=[:lines & %00001000]
+;	.print "mDL_BLANK UNUSED = ",TEMP_MDL_UNUSED 
+
+	TEMP_MDL_HI_NYB=[:lines & %01110000]
+;	.print "mDL_BLANK HI     = ",TEMP_MDL_HI_NYB
+
+	TEMP_MDL_LO_NYB=[:lines & %00000111]
+;	.print "mDL_BLANK LO     = ",TEMP_MDL_LO_NYB
+	
+	.if TEMP_MDL_UNUSED>0
+		.error "mDL_BLANK: lines argument must not have bit %00001000/$08 set."
 	.endif
 	 
-	.if MDL_HI_NYB>0 ; BLANK instruction passed
-		.if MDL_LO_NYB>0 ; Bits are on in the low nybble too.  This is bad.
+	.if TEMP_MDL_HI_NYB>0 ; BLANK instruction passed
+		.if TEMP_MDL_LO_NYB>0 ; Bits are on in the low nybble too.  This is bad.
 			.error "mDL_BLANK: lines argument must not have bits set in the high and low nybbles.  Use 0 to 7."
 		.else ; Bits on in the instruction part.  So, use that
-			.byte MDL_DLI|MDL_HI_NYB
+			.byte [TEMP_MDL_DLI|TEMP_MDL_HI_NYB]
 		.endif
 	.else ; No bits in the Instruction. Assume we're using the 0 to 7 numeric, and multiply to shift bits.
-		.byte MDL_DLI|[MDL_LO_NYB * 16]
+		.byte [TEMP_MDL_DLI|[TEMP_MDL_LO_NYB * 16]]
 	.endif
 
 .endm
@@ -219,13 +228,18 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 		.error "mDL: 1 argument required, mode (value of low nybble $2 to $F)."
 	.endif
 
-	MDL_TEMP=:mode&$0F
-	.if MDL_TEMP<DL_TEXT_2
+;	.print "** mDL Mode = ",:mode
+
+	TEMP_MDL_MODE=[:mode&$0F]
+;	.print "mDL Temp = ",TEMP_MDL_MODE
+	
+	.if TEMP_MDL_MODE<DL_TEXT_2
 		.error "mDL: graphics mode argument must have a low nybble value from $2 to $F."
 	.endif
 
 	; Byte for Mode value.
 	.byte :mode  
+	
 .endm
 
 
@@ -245,12 +259,16 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 .macro mDL_LMS  mode,screenMemory
 	.if :0<>2
-		.error "mDL_LMS: 2 arguments required, mode (value of low nybble $2 to $F), screen memory (address)."
+		.error "** mDL_LMS: 2 arguments required, mode (value of low nybble $2 to $F), screen memory (address)."
 	.endif
 
+;	.print "** mDL_LMS Mode = ",:mode
+;	.print "** mDL_LMS Mem  = ",:screenMemory
+
 	; Byte for Mode plus LMS option.  And then the screen memory address.
-	mDL :mode|DL_LMS
-	.word :screenMemory   
+	mDL [:mode|DL_LMS]
+	.word :screenMemory
+
 .endm
 
 
@@ -270,7 +288,8 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 	; Byte for JMP.  And then the screen memory address.
 	.byte DL_JUMP
-	.word :screenMemory   
+	.word :screenMemory
+
 .endm
 
 
@@ -291,5 +310,6 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 	; Byte for JVB.  And then the display list memory address.
 	.byte DL_JUMP_VB
-	.word :dlMemory   
+	.word :dlMemory
+
 .endm
