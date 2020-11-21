@@ -174,10 +174,10 @@
 	.if :0<>1
 		.error "LDA_VM: 1 argument required"
 	.else
-		.if :value>$FF
-			lda :value  ; get from memory
+		.if [:value]>$FF
+			lda [:value]  ; get from memory
 		.else
-			lda #:value ; Get constant value
+			lda #[:value] ; Get constant value
 		.endif
 	.endif
 .endm
@@ -186,10 +186,10 @@
 	.if :0<>1
 		.error "LDX_VM: 1 argument required"
 	.else
-		.if :value>$FF
-			ldx :value  ; get from memory
+		.if [:value]>$FF
+			ldx [:value]  ; get from memory
 		.else
-			ldx #:value ; Get constant value
+			ldx #[:value] ; Get constant value
 		.endif
 	.endif
 .endm
@@ -198,10 +198,10 @@
 	.if :0<>1
 		.error "LDY_VM: 1 argument required"
 	.else
-		.if :value>$FF
-			ldy :value  ; get from memory
+		.if [:value]>$FF
+			ldy [:value]  ; get from memory
 		.else
-			ldy #:value ; Get constant value
+			ldy #[:value] ; Get constant value
 		.endif
 	.endif
 .endm
@@ -229,10 +229,10 @@
 	.IF :0<>2
 		.ERROR "LoadInt_M: 2 arguments (target addr, source addr) required."
 	.ELSE
-		lda :source
-		sta :target
-		lda :source + 1
-		sta :target + 1
+		lda [:source]
+		sta [:target]
+		lda [[:source] + 1]
+		sta [[:target] + 1]
 	.ENDIF
 .endm
 
@@ -255,10 +255,10 @@
 	.if :0<>2
 		.error "LoadInt_V: 2 arguments (target addr, 16-bit value) required."
 	.else
-		lda #<:value
-		sta :target
-		lda #>:value
-		sta :target + 1
+		lda #<[:value]
+		sta [:target]
+		lda #>[:value]
+		sta [[:target] + 1]
 	.endif
 .endm
 
@@ -299,8 +299,8 @@
 		.IF :position<0 .OR :position>8
 			.ERROR "Bitmap16LeftShiftPos: position must be 0 through 8."
 		.ELSE
-			.IF :position==0
-				.byte [:value & $FF00] >> 8
+			.IF [:position]==0
+				.byte [[:value] & $FF00] >> 8
 			.ELSE
 				.byte [[:value << :position] & $FF00 ] >> 8
 			.ENDIF
@@ -334,18 +334,18 @@
 	.IF :0<>3
 		.ERROR "Bitmap16LeftShift:3 arguments (value, first, last) required."
 	.ELSE
-		.IF :first<0 .OR :first>8
+		.IF [:first]<0 .OR [:first]>8
 			.ERROR "Bitmap16LeftShift: first position must be 0 through 8."
 		.ELSE
-			.IF :last<0 .OR :last>8
+			.IF [:last]<0 .OR [:last]>8
 				.ERROR "Bitmap16LeftShift: last position must be 0 through 8."
 			.ELSE
-				.IF :last<:first
+				.IF [:last]<[:first]
 					.ERROR "Bitmap16LeftShift: last position must be greater than or equal to first position."			
 				.ELSE
-					?TEMP_POSITION = :first
-					.REPT [:last-:first+1],#
-						mBitmap16LeftShiftPos :value,?TEMP_POSITION
+					?TEMP_POSITION = [:first]
+					.REPT [[:last]-[:first]+1],#
+						mBitmap16LeftShiftPos [:value],?TEMP_POSITION
 						?TEMP_POSITION++
 					.ENDR
 				.ENDIF
@@ -378,7 +378,7 @@
 	.IF :0<>1
 		.ERROR "Bitmap16Left: 1 argument (value) required."
 	.ELSE
-		mBitmap16LeftShift :value,0,7
+		mBitmap16LeftShift [:value],0,7
 	.ENDIF
 .endm
 
@@ -395,13 +395,13 @@
 	.IF :0<>2
 		.ERROR "Bitmap16RightShiftPos:2 arguments (value, position) required."
 	.ELSE
-		.IF :position<0 .OR :position>8
+		.IF [:position]<0 .OR [:position]>8
 			.ERROR "Bitmap16RightShiftPos: position must be 0 through 8."
 		.ELSE
-			.IF :position==0
-				.byte <:value
+			.IF [:position]==0
+				.byte <[:value]
 			.ELSE
-				.byte [:value >> :position] & $FF
+				.byte [[[:value] >> [:position]] & $FF]
 			.ENDIF
 		.ENDIF
 	.ENDIF
@@ -433,18 +433,18 @@
 	.IF :0<>3
 		.ERROR "Bitmap16RightShift:3 arguments (value, first, last) required."
 	.ELSE
-		.IF :first<0 .OR :first>8
+		.IF [:first]<0 .OR [:first]>8
 			.ERROR "Bitmap16RightShift: first position must be 0 through 8."
 		.ELSE
-			.IF :last<0 .OR :last>8
+			.IF [:last]<0 .OR :[last]>8
 				.ERROR "Bitmap16RightShift: last position must be 0 through 8."
 			.ELSE
-				.IF :last<:first
+				.IF [:last]<[:first]
 					.ERROR "Bitmap16RightShift: last position must be greater than or equal to first position."			
 				.ELSE
-					?TEMP_POSITION = :first
-					.REPT [:last-:first+1],#
-						mBitmap16RightShiftPos :value,?TEMP_POSITION
+					?TEMP_POSITION = [:first]
+					.REPT [[:last]-[:first]+1],#
+						mBitmap16RightShiftPos [:value],?TEMP_POSITION
 						?TEMP_POSITION++
 					.ENDR
 				.ENDIF
@@ -477,7 +477,7 @@
 	.IF :0<>1
 		.ERROR "Bitmap16Right: 1 argument (value) required."
 	.ELSE
-		mBitmap16RightShift :value,0,7
+		mBitmap16RightShift [:value],0,7
 	.ENDIF
 .endm
 
@@ -525,12 +525,12 @@
 	.if :0<>2
 		.error "DiskPoke: 2 arguments (target addr, byte value) required."
 	.else
-		.if :value>$FF
+		.if [:value]>$FF
 			.error "DiskPoke: Agument 2 for byte value is greater then $FF"
 		.else
 			DISKPOKE_TEMP =*
 			ORG :address
-			.byte :value
+			.byte [:value]
 			ORG DISKPOKE_TEMP
 		.endif
 	.endif
@@ -550,12 +550,13 @@
 ;-------------------------------------------------------------------------------
 
 .macro mDiskDPoke  address,value
+	.print "mDiskPoke ",:address," ",:value
 	.if :0<>2
 		.error "DiskDPoke: 2 arguments (target addr, integer value) required."
 	.else
 		DISKDPOKE_TEMP =*
 		ORG :address
-		.word :value
+		.word [:value]
 		ORG DISKDPOKE_TEMP
 	.endif
 .endm 
@@ -581,15 +582,15 @@
 	.endif
 
 	; If the same, then no need to change low byte.
-	.if [<:current_DLI]<>[<:next_DLI] 
-		lda #<:next_DLI ; Low byte of next DLI address
-		sta VDSLST      ; Set vector
+	.if [<[:current_DLI]]<>[<[:next_DLI]] 
+		lda #<[:next_DLI] ; Low byte of next DLI address
+		sta VDSLST        ; Set vector
 	.endif
 
 	; If the same, then no need to change high byte.
-	.if [>:current_DLI]<>[>:next_DLI] 
-		lda #>:next_DLI ; High byte of next DLI address
-		sta VDSLST+1    ; Set vector
+	.if [>[:current_DLI]]<>[>[:next_DLI]] 
+		lda #>[:next_DLI] ; High byte of next DLI address
+		sta VDSLST+1      ; Set vector
 	.endif
 
 	pla ; restore A from stack

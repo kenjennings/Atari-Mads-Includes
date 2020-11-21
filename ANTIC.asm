@@ -183,16 +183,16 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 ;	.print "** mDL_BLANK lines  = ",:lines
 	
-	TEMP_MDL_DLI=[:lines & DL_DLI]
+	TEMP_MDL_DLI=[[:lines] & DL_DLI]
 ;	.print "mDL_BLANK DLI    = ",TEMP_MDL_DLI 
 
-	TEMP_MDL_UNUSED=[:lines & %00001000]
+	TEMP_MDL_UNUSED=[[:lines] & %00001000]
 ;	.print "mDL_BLANK UNUSED = ",TEMP_MDL_UNUSED 
 
-	TEMP_MDL_HI_NYB=[:lines & %01110000]
+	TEMP_MDL_HI_NYB=[[:lines] & %01110000]
 ;	.print "mDL_BLANK HI     = ",TEMP_MDL_HI_NYB
 
-	TEMP_MDL_LO_NYB=[:lines & %00000111]
+	TEMP_MDL_LO_NYB=[[:lines] & %00000111]
 ;	.print "mDL_BLANK LO     = ",TEMP_MDL_LO_NYB
 	
 	.if TEMP_MDL_UNUSED>0
@@ -230,7 +230,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 ;	.print "** mDL Mode = ",:mode
 
-	TEMP_MDL_MODE=[:mode&$0F]
+	TEMP_MDL_MODE=[[:mode]&$0F]
 ;	.print "mDL Temp = ",TEMP_MDL_MODE
 	
 	.if TEMP_MDL_MODE<DL_TEXT_2
@@ -238,7 +238,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 	.endif
 
 	; Byte for Mode value.
-	.byte :mode  
+	.byte [:mode]  
 	
 .endm
 
@@ -266,8 +266,8 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 ;	.print "** mDL_LMS Mem  = ",:screenMemory
 
 	; Byte for Mode plus LMS option.  And then the screen memory address.
-	mDL [:mode|DL_LMS]
-	.word :screenMemory
+	mDL [[:mode]|DL_LMS]
+	.word [:screenMemory]
 
 .endm
 
@@ -288,7 +288,7 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 	; Byte for JMP.  And then the screen memory address.
 	.byte DL_JUMP
-	.word :screenMemory
+	.word [:screenMemory]
 
 .endm
 
@@ -310,6 +310,6 @@ DL_MAP_F = $0F ; 1.5 Color, 320 Pixels x 1 Scan Lines (and GTIA modes), 40 bytes
 
 	; Byte for JVB.  And then the display list memory address.
 	.byte DL_JUMP_VB
-	.word :dlMemory
+	.word [:dlMemory]
 
 .endm
