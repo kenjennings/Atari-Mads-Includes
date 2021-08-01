@@ -63,7 +63,7 @@ TRIG1 =  $D011 ; (Read) Joystick 1 trigger
 TRIG2 =  $D012 ; (Read) Joystick 2 trigger
 TRIG3 =  $D013 ; (Read) Joystick 3 trigger
 ;
-PAL =    $D014 ; (Read) PAL Flag
+PAL =    $D014 ; (Read) PAL Flag - Bit 1-3:  Clear (xxxx000x) = PAL/SECAM, Set (xxxx111x) = NTSC
 PRIOR =  $D01B ; Control Priority, Fifth Player and GTIA modes
 VDELAY = $D01C ; Player Missile Vertical Delay
 GRACTL = $D01D ; Graphics Control, P/M DMA and joystick trigger latches
@@ -93,6 +93,10 @@ COLOR4 =  $02C8 ; COLBK  - Playfield Background color (Border for modes 2, 3, an
 GPRIOR = $026F ; PRIOR - Control Priority, Fifth Player and GTIA modes
 ;=================================================
 ; Important Bit Positions
+;
+; Detect NTSC/PAL
+;
+MASK_NTSCPAL_BITS =%00001110 ; Clear (xxxx000x) = PAL/SECAM, Set (xxxx111x) = NTSC
 ;
 ; SIZEP0 - SIZEP3
 ;
