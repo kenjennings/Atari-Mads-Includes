@@ -268,7 +268,7 @@ PM_1LINE_OVERSCAN_BOTTOM = $F7
 COLOR_GREY =         $00 ; From black to white - That averages to grey, right?
 ; Some also like to think of the first color value as black.
 COLOR_BLACK =        $00
-; White is the same color as black, just brighter.
+; White is the same color as black, just brighter. ($F in case of using as GTIA pixel)
 COLOR_WHITE =        $0F
 
 COLOR_ORANGE1 =      $10
@@ -287,3 +287,26 @@ COLOR_YELLOW_GREEN = $D0
 COLOR_ORANGE_GREEN = $E0
 COLOR_LITE_ORANGE =  $F0
 
+; PAL is offset for non-white/grey
+;
+PAL_COLOR_GREY =         $00 ; From black to white - That averages to grey, right?
+; Some also like to think of the first color value as black.
+PAL_COLOR_BLACK =        $00
+; White is the same color as black, just brighter. ($F in case of using as GTIA pixel)
+PAL_COLOR_WHITE =        $0F
+
+PAL_COLOR_ORANGE1 =      $F0
+PAL_COLOR_ORANGE2 =      $10
+PAL_COLOR_RED_ORANGE =   $20
+PAL_COLOR_PINK =         $30
+PAL_COLOR_PURPLE =       $40
+PAL_COLOR_PURPLE_BLUE =  $50
+PAL_COLOR_BLUE1 =        $60
+PAL_COLOR_BLUE2 =        $70
+PAL_COLOR_LITE_BLUE =    $80
+PAL_COLOR_AQUA =         $90
+PAL_COLOR_BLUE_GREEN =   $A0
+PAL_COLOR_GREEN =        $B0
+PAL_COLOR_YELLOW_GREEN = $C0
+PAL_COLOR_ORANGE_GREEN = $D0
+PAL_COLOR_LITE_ORANGE =  $E0
