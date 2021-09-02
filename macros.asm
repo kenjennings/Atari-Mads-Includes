@@ -251,14 +251,14 @@
 ;  C = &D
 ;-------------------------------------------------------------------------------
 
-.macro mLoadInt_V  target,value
+.macro mLoadInt_V target,value
 	.if :0<>2
 		.error "LoadInt_V: 2 arguments (target addr, 16-bit value) required."
 	.else
-		lda #<[:value]
-		sta [:target]
-		lda #>[:value]
-		sta [[:target] + 1]
+		lda #<:value
+		sta :target
+		lda #>:value
+		sta :target + 1
 	.endif
 .endm
 
@@ -436,7 +436,7 @@
 		.IF [:first]<0 .OR [:first]>8
 			.ERROR "Bitmap16RightShift: first position must be 0 through 8."
 		.ELSE
-			.IF [:last]<0 .OR :[last]>8
+			.IF [:last]<0 .OR [:last]>8
 				.ERROR "Bitmap16RightShift: last position must be 0 through 8."
 			.ELSE
 				.IF [:last]<[:first]
