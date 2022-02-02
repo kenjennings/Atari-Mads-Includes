@@ -264,6 +264,62 @@
 
 
 ;===============================================================================
+; LIBRARY WRAPPERS
+;===============================================================================
+; memset
+; memcpy
+;===============================================================================
+
+;-------------------------------------------------------------------------------
+;                                                                MEMSET  A
+;-------------------------------------------------------------------------------
+; mMemset <Destination Address>, <Value>, <Size>
+;
+; Loads the 8-bit Value into the range of memory beginning at the Destination 
+; addresses and extending for the Size of contiguous bytes.
+; 
+;-------------------------------------------------------------------------------
+
+.macro mMemset  target,value,size
+	.IF :0<>3
+		.ERROR "Memset: 3 arguments (target addr, value, size) required."
+	.ELSE
+		mLoadInt_V zMemSet_Dst,[:target]
+
+		mLDY_VM [:size]
+
+		mLDA_VM [:value]
+
+		jsr libMemSet
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                                MEMCPY  A
+;-------------------------------------------------------------------------------
+; mMemcpy <Destination Address>, <Source Address>, <Size>
+;
+; Loads the 8-bit Value into the range of memory beginning at the Destination 
+; addresses and extending for the Size of contiguous bytes.
+; 
+;-------------------------------------------------------------------------------
+
+.macro mMemcpy  target,source,size
+	.IF :0<>3
+		.ERROR "Memset: 3 arguments (target addr, source addr, size) required."
+	.ELSE
+		mLoadInt_V zMemSet_Dst,[:target]
+		
+		mLoadInt_V zMemCpy_Src,[:source]
+
+		mLDY_VM [:size]
+
+		jsr libMemCpy
+	.ENDIF
+.endm
+
+;===============================================================================
 ; BITMAP GYMNASTICS
 ;===============================================================================
 ; The Atari's fine scrolling can manage large-scale movement of substantial 
