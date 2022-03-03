@@ -292,6 +292,23 @@ INTERNAL_INVERSE        = $80  ; Add or OR to other internal values.
 
 
 ; ==============================================================================
+; Mode 6 and 7 character manipulation.
+; ==============================================================================
+; Mask for character component of screen memory byte.
+; Mask for color component of screen memory byte.
+; Values for each color in bits 6 and 7.
+; ==============================================================================
+
+CSET_MODE67_CHARMASK    = %00111111 ; AND mask to retain character value 
+CSET_MODE67_COLMASK     = %11000000 ; AND mask to retain color value
+
+CSET_MODE67_COLPF0      = %00000000 ; Bits %00 for color 0
+CSET_MODE67_COLPF1      = %01000000 ; Bits %01 for color 1
+CSET_MODE67_COLPF2      = %10000000 ; Bits %10 for color 2
+CSET_MODE67_COLPF3      = %11000000 ; Bits %11 for color 3
+
+
+; ==============================================================================
 ; Macros 
 ; ==============================================================================
 ;
