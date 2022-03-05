@@ -606,7 +606,7 @@
 ;-------------------------------------------------------------------------------
 
 .macro mDiskDPoke  address,value
-	.print "mDiskPoke ",:address," ",:value
+;	.print "mDiskDPoke ",:address," ",:value
 	.if :0<>2
 		.error "DiskDPoke: 2 arguments (target addr, integer value) required."
 	.else
@@ -614,6 +614,14 @@
 		ORG :address
 		.word [:value]
 		ORG DISKDPOKE_TEMP
+		; There are some special values I like to see in debug messages.
+		.if :address=DOS_RUN_ADDR 
+			.print "mDiskDPoke DOS_RUN_ADDR = ",:value
+		.endif
+		.if :address=DOS_INIT_ADDR 
+			.print "mDiskDPoke DOS_INIT_ADDR = ",:value
+		.endif
+
 	.endif
 .endm 
 
