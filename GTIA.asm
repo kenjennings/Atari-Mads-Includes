@@ -219,7 +219,15 @@ CONSOLE_START =        %00000001 ; Start button
 CONSOLE_SELECT =       %00000010 ; Select button
 CONSOLE_OPTION =       %00000100 ; Option button
 CONSOLE_SPEAKER =      %00001000 ; (Write) Keyboard speaker
-
+;
+; Atari800 emulator keys
+; ======================
+; F2 Option key
+; F3 Select key
+; F4 Start key
+;
+; F5 Reset key ("warm reset")
+;
 ;=================================================
 ; Other Value Lists 
 ;

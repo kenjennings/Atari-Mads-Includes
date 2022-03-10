@@ -166,7 +166,7 @@
 ; Load an explicit value or load from memeory?
 ; This means do not use page 0 references which would 
 ; be considered values less than 256, and the 
-; address would be loaded as an explit value instead.
+; address would be loaded as an explicit value instead.
 ; (Which could be useful if you know what you're doing).
 ;===============================================================================
 
@@ -229,10 +229,10 @@
 	.IF :0<>2
 		.ERROR "LoadInt_M: 2 arguments (target addr, source addr) required."
 	.ELSE
-		lda [:source]
-		sta [:target]
-		lda [[:source] + 1]
-		sta [[:target] + 1]
+		lda :source
+		sta :target
+		lda :source + 1
+		sta :target + 1
 	.ENDIF
 .endm
 
@@ -307,7 +307,7 @@
 
 .macro mMemcpy  target,source,size
 	.IF :0<>3
-		.ERROR "Memset: 3 arguments (target addr, source addr, size) required."
+		.ERROR "Memcpy: 3 arguments (target addr, source addr, size) required."
 	.ELSE
 		mLoadInt_V zMemSet_Dst,[:target]
 		
@@ -318,6 +318,34 @@
 		jsr libMemCpy
 	.ENDIF
 .endm
+
+
+;-------------------------------------------------------------------------------
+;                                                                MEMCPYM  A
+;-------------------------------------------------------------------------------
+; mMemcpym <Destination Address>, <Source Address [of address]>, <Size>
+;
+; Loads the 8-bit Value into the range of memory beginning at the Destination 
+; addresses extending for the Size of contiguous bytes.
+; Source is assumed to be the address of a pointer.
+; 
+;-------------------------------------------------------------------------------
+
+.macro mMemcpym  target,source,size
+	.IF :0<>3
+		.ERROR "Memcpym: 3 arguments (target addr, source addr of addr, size) required."
+	.ELSE
+		mLoadInt_V zMemSet_Dst,[:target]
+		
+		mLoadInt_M zMemCpy_Src,:source
+
+		mLDY_VM [:size]
+
+		jsr libMemCpy
+	.ENDIF
+.endm
+
+
 
 ;===============================================================================
 ; BITMAP GYMNASTICS
