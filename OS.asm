@@ -367,6 +367,7 @@ DSKTIM = $0246 ; Disk I/O timeout countdown.
 LINBUF = $0247 ; 40 characters. temporary buffer for screen data.
 
 ; GPRIOR = $026F in GTIA.asm
+
 ; PADDL0 = $0270 in POKEY.asm
 ; PADDL1 = $0271 in POKEY.asm
 ; PADDL2 = $0272 in POKEY.asm
@@ -375,22 +376,25 @@ LINBUF = $0247 ; 40 characters. temporary buffer for screen data.
 ; PADDL5 = $0275 in POKEY.asm
 ; PADDL6 = $0276 in POKEY.asm
 ; PADDL7 = $0277 in POKEY.asm
-; STICK0 = $0278 in POKEY.asm
-; STICK1 = $0279 in POKEY.asm
-; STICK2 = $027A in POKEY.asm
-; STICK3 = $027B in POKEY.asm
-; PTRIG0 = $027C in POKEY.asm
-; PTRIG1 = $027D in POKEY.asm
-; PTRIG2 = $027E in POKEY.asm
-; PTRIG3 = $027F in POKEY.asm
-; PTRIG4 = $0280 in POKEY.asm
-; PTRIG5 = $0281 in POKEY.asm
-; PTRIG6 = $0282 in POKEY.asm
-; PTRIG7 = $0283 in POKEY.asm
-; STRIG0 = $0284 in POKEY.asm
-; STRIG1 = $0285 in POKEY.asm
-; STRIG2 = $0286 in POKEY.asm
-; STRIG3 = $0287 in POKEY.asm
+
+; STICK0 = $0278 in PIA.asm
+; STICK1 = $0279 in PIA.asm
+; STICK2 = $027A in PIA.asm
+; STICK3 = $027B in PIA.asm
+
+; PTRIG0 = $027C in PIA.asm
+; PTRIG1 = $027D in PIA.asm
+; PTRIG2 = $027E in PIA.asm
+; PTRIG3 = $027F in PIA.asm
+; PTRIG4 = $0280 in PIA.asm
+; PTRIG5 = $0281 in PIA.asm
+; PTRIG6 = $0282 in PIA.asm
+; PTRIG7 = $0283 in PIA.asm
+
+; STRIG0 = $0284 in GTIA.asm
+; STRIG1 = $0285 in GTIA.asm
+; STRIG2 = $0286 in GTIA.asm
+; STRIG3 = $0287 in GTIA.asm
 
 CSTAT =  $0288 ; Cassette status register.
 WMODE =  $0289 ; Cassette Write mode.  0 = read. $80 = write
@@ -431,6 +435,7 @@ BOTSCR = $02BF ; Number of rows available for printing. 24 for OS Mode 0.  4 for
 ; PCOLOR1 = $02C1 in GTIA.asm
 ; PCOLOR2 = $02C2 in GTIA.asm
 ; PCOLOR3 = $02C3 in GTIA.asm
+
 ; COLOR0 =  $02C4 in GTIA.asm
 ; COLOR1 =  $02C5 in GTIA.asm
 ; COLOR2 =  $02C6 in GTIA.asm
@@ -457,7 +462,7 @@ CH1 =    $02F2 ; Keyboard character code previously in CH/$02FC.
 ; CHBAS = $02F4 in ANTIC.asm
 
 ATACHR = $02FA ; Last value read or written at graphics cursor.  Atascii in text modes. color number in others.  
-; CH =     $02FC ; in POKEY.asm KBCODE - Internal keyboard code of last key pressed.  $FF is no key pressesd.
+; CH   = $$02FC ; in POKEY.asm == KBCODE - Internal keyboard code of last key pressed.  $FF is no key pressesd.
 FILDAT = $02FD ; Color for the fill region.
 DSPFLG = $02FE ; E: config for cursor control characters. 0 = normal operation. !0 = Display cursor controls instead of acting on them.
 SSFLAG = $02FF ; Scrolling stop/start control. 0 = normal scrolling.  $FF = stop scrolling.

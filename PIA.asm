@@ -10,9 +10,12 @@ PORTB = $D301 ; Joystick ports 3 and 4, STICK2 and STICK3
 PACTL = $D302 ; Port A Control
 PBCTL = $D303 ; Port B Control
 ;=================================================
-; Shadow Registers for Hardware Registers
+; Shadow Registers for Hardware Registers...
+; The system vertical blank routine extracts bits 
+; from PORTA/PORTB and distributes the values to 
+; the shadow registeres below.
 ;
-STICK0 = $0278
+STICK0 = $0278 
 STICK1 = $0279
 STICK2 = $027A
 STICK3 = $027B
