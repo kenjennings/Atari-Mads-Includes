@@ -461,8 +461,17 @@ CH1 =    $02F2 ; Keyboard character code previously in CH/$02FC.
 ; CHACT = $02F3 in ANTIC.asm
 ; CHBAS = $02F4 in ANTIC.asm
 
-ATACHR = $02FA ; Last value read or written at graphics cursor.  Atascii in text modes. color number in others.  
+SPARE5 = $02F5 ; Unused Spare Byte OS A/B
+SPARE6 = $02F6 ; Unused Spare Byte OS A/B
+SPARE7 = $02F7 ; Unused Spare Byte OS A/B
+SPARE8 = $02F8 ; Unused Spare Byte OS A/B
+SPARE9 = $02F9 ; Unused Spare Byte OS A/B
+
+CHAR   = $02FA ; Internal code for last character value read or written (internal code of ATACHR) 
+ATACHR = $02FB ; Last value read or written at graphics cursor.  Atascii in text modes. color number in others.  
+
 ; CH   = $$02FC ; in POKEY.asm == KBCODE - Internal keyboard code of last key pressed.  $FF is no key pressesd.
+
 FILDAT = $02FD ; Color for the fill region.
 DSPFLG = $02FE ; E: config for cursor control characters. 0 = normal operation. !0 = Display cursor controls instead of acting on them.
 SSFLAG = $02FF ; Scrolling stop/start control. 0 = normal scrolling.  $FF = stop scrolling.
@@ -565,6 +574,7 @@ CIO_S_FILL =   $12
 ; ICAX1 Common Options (OPEN modes).
 CIO_ICAX_READ      = $04
 CIO_ICAX_WRITE     = $08 ; READ + WRITE starts I/O at first byte.
+CIO_ICAX_READWRITE = $0C ; Conveniently combined CIO_ICAX_READ | CIO_ICAX_WRITE
 
 ; ICAX1 Less Common Options (OPEN modes.)
 CIO_ICAX_E_FORCED     = $01 ; E: FORCED input. Usually with READ + WRITE.
