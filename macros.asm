@@ -12,6 +12,7 @@
 ; BITMAP GYMNASTICS
 ; DISK SHENANIGANS
 ; DLI CHAINING
+; LOW/HIGH BYTES DATA SEPARATION
 ;===============================================================================
 
 ;===============================================================================
@@ -163,7 +164,7 @@
 ;===============================================================================
 ; The Basic Choice - (paper or plastic?)
 ;===============================================================================
-; Load an explicit value or load from memeory?
+; Load an explicit value or load from memory?
 ; This means do not use page 0 references which would 
 ; be considered values less than 256, and the 
 ; address would be loaded as an explicit value instead.
@@ -268,6 +269,7 @@
 ;===============================================================================
 ; memset
 ; memcpy
+; memcpym
 ;===============================================================================
 
 ;-------------------------------------------------------------------------------
@@ -358,12 +360,12 @@
 ; effects.  This can be data for images in the playfield graphics, or 
 ; characters, or player/missile graphics.
 ;
-; This work to shift values in can be done by code to calculate updates on 
-; demand at run time.  This is usually the least expensive option in terms of 
-; memory and most expensive in terms of execution time.
+; This work to shift values in memory can be done by code to calculate updates
+; on demand at run time.  This is usually the least expensive option in terms 
+; of memory and most expensive in terms of execution time.
 ;
 ; Precalculating all the shifted values minimizes CPU work, but maximizes
-; memory usage creating tables of pre-shifted values.
+; memory usage occupied with tables of pre-shifted values.
 ;
 ; This group of macros helps facilitate calculating tables of pre-shifted data.
 ;===============================================================================
@@ -653,6 +655,11 @@
 	.endif
 .endm 
 
+
+;===============================================================================
+; DLI CHAINING
+;===============================================================================
+
 ;-------------------------------------------------------------------------------
 ;                                                                CHAINDLI A
 ;-------------------------------------------------------------------------------
@@ -687,5 +694,112 @@
 
 	pla ; restore A from stack
 	rti ; DLI complete
+.endm
+
+
+;===============================================================================
+; LOW/HIGH BYTES DATA SEPARATION
+;===============================================================================
+
+;-------------------------------------------------------------------------------
+;                                                                LOWYTE
+;-------------------------------------------------------------------------------
+; mLowByte 
+;
+; Given a list of up to 8 values, declare the low bytes of these 
+; values as .byte data.
+;
+; This is useful to divide a list/table of addresses or other 16-bit  values into 
+; a list of the low bytes, and a separate list of the high bytes. (See mHighByte)
+;
+; Memory directive only, so no register effects.
+;
+; No return arguments/generated responses.
+;-------------------------------------------------------------------------------
+
+; Define/declare the low byte value of potentially 16-bit values.
+; Allows up to 8 values per macro call.
+
+.macro mLowByte value1,value2,value3,value4,value5,value6,value7,value8
+	.IF :0<1
+		.ERROR "LowByte: No arguments. At least one value is requiired (8 maximum)."
+	.ELSE
+		; Arguments >= 1
+		.byte <:value1
+		.IF :0>1
+			.byte <:value2
+			.IF :0>2
+				.byte <:value3
+				.IF :0>3
+					.byte <:value4
+					.IF :0>4
+						.byte <:value5
+						.IF :0>5
+							.byte <:value6
+							.IF :0>6
+								.byte <:value7
+								.IF :0>7
+									.byte <:value8
+									.IF :0>8
+										.ERROR "LowByte: More than 8 arguments are not allowed."
+									.ENDIF
+								.ENDIF
+							.ENDIF
+						.ENDIF
+					.ENDIF
+				.ENDIF
+			.ENDIF
+		.ENDIF
+	.ENDIF
+.endm
+
+
+;-------------------------------------------------------------------------------
+;                                                                HIGHYTE
+;-------------------------------------------------------------------------------
+; mHIGHByte 
+;
+; Given a list of up to 8 values, declare the high bytes of these 
+; values as .byte data.
+;
+; This is useful to divide a list/table of addresses or other 16-bit values into 
+; a list of the high bytes, and a separate list of the low bytes. (See mLowByte)
+;
+; Memory directive only, so no register effects.
+;
+; No return arguments/generated responses.
+;-------------------------------------------------------------------------------
+
+.macro mHighByte value1,value2,value3,value4,value5,value6,value7,value8
+	.IF :0<1
+		.ERROR "HighByte: No arguments. At least one value is requiired (8 maximum)."
+	.ELSE
+		; Arguments >= 1
+		.byte >:value1
+		.IF :0>1
+			.byte >:value2
+			.IF :0>2
+				.byte >:value3
+				.IF :0>3
+					.byte >:value4
+					.IF :0>4
+						.byte >:value5
+						.IF :0>5
+							.byte >:value6
+							.IF :0>6
+								.byte >:value7
+								.IF :0>7
+									.byte >:value8
+									.IF :0>8
+										.ERROR "HighByte: More than 8 arguments are not allowed."
+									.ENDIF
+								.ENDIF
+							.ENDIF
+						.ENDIF
+					.ENDIF
+				.ENDIF
+			.ENDIF
+		.ENDIF
+	.ENDIF
 .endm
 
